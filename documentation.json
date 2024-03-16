@@ -208,29 +208,9 @@
             "type": "string",
             "description": "Ссылка на аватар пользователя."
           },
-          "position": {
-            "type": "string",
-            "description": "Должность пользователя"
-          },
-          "description": {
-            "type": "string",
-            "description": "описание профиля пользователя"
-          },
           "birthday": {
             "type": "string",
             "description": "День рождения пользователя"
-          },
-          "company_id": {
-            "type": "uuid",
-            "description": "Компания пользователя"
-          },
-          "department_id": {
-            "type": "uuid",
-            "description": "Департамент пользователя"
-          },
-          "role_id": {
-            "type": "uuid",
-            "description": "Роль пользователя"
           },
           "created_at": {
             "type": "string",
@@ -245,12 +225,7 @@
           "email": "marlen.kreiger@example.org",
           "phone": "(732) 373-9833",
           "avatar": "http://127.0.0.1/avatar.svg",
-          "position": "Transportation Equipment Painters",
-          "description": "Perferendis est sed voluptatem inventore quam et.",
           "birthday": "Mon Jun 21 1993 00:00:00 GMT+0000",
-          "company_id": "0f486178-df9b-3851-97b6-4583d4ee1cad",
-          "department_id": "0ee5af1d-ba6c-3314-9cab-e34bbd59120a",
-          "role_id": "90df8c2a-a2f8-33a8-9a5c-5eaf8b8fb7ed",
           "created_at": "Sat Mar 16 2024 12:38:40 GMT+0000"
         }
       },

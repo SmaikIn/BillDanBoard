@@ -24,18 +24,13 @@ final class UserRepository
     private function formatUserDto(User $user): UserDto
     {
         return new UserDto(
-            id: Uuid::fromString($user->id),
+            id: Uuid::fromString($user->uuid),
             firstName: $user->first_name,
             lastName: $user->last_name,
             secondName: $user->second_name,
             phone: Phone::create($user->phone),
             photo: Photo::create(asset($user->avatar), $this->getFullName($user->first_name, $user->last_name)),
             email: Email::create($user->email),
-            position: $user->position,
-            description: $user->description,
-            companyId: Uuid::fromString($user->company_id),
-            departmentId: Uuid::fromString($user->department_id),
-            roleId: Uuid::fromString($user->role_id),
             yandexId: $user->yandex_id,
             birthday: Carbon::create($user->birthday),
             createdAt: Carbon::create($user->created_at),
