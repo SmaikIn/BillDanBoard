@@ -1,0 +1,109 @@
+version: "3"
+
+services:
+
+  #Nginx webserver
+  webserver:
+    container_name: diplom_webserver
+    tty: true
+    restart: unless-stopped
+    build:
+      context: ./
+      dockerfile: .docker/nginx/Dockerfile
+    ports:
+      - "80:80"
+    volumes:
+      - .:/var/www
+      - .docker/nginx/conf.d/:/etc/nginx/conf.d/
+    networks:
+      - app-network
+
+  # PHP service
+  app:
+    container_name: diplom_app
+    tty: true
+    restart: unless-stopped
+    build:
+      context: ./
+      dockerfile: .docker/php/Dockerfile
+    working_dir: /var/www
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
+    volumes:
+      - .:/var/www
+      - .docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini
+    environment:
+      XDEBUG_SESSION: 1
+      XDEBUG_MODE: '${SAIL_XDEBUG_MODE:-off}'
+      XDEBUG_CONFIG: '${SAIL_XDEBUG_CONFIG:-client_host=host.docker.internal}'
+      PHP_IDE_CONFIG: 'serverName=laravel'
+    networks:
+      - app-network
+
+  # DB service (MySQL)
+  db:
+    container_name: diplom_db
+    #platform: linux/x86_64 uncomment for MacBook M1
+    build:
+      context: ./
+      dockerfile: .docker/mysql/Dockerfile
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: '${DB_DATABASE}'
+      MYSQL_USER: '${DB_USERNAME}'
+      MYSQL_PASSWORD: '${DB_PASSWORD}'
+      MYSQL_ROOT_HOST: "%"
+      MYSQL_ROOT_PASSWORD: '${DB_PASSWORD}'
+      SERVICE_TAGS: dev
+      SERVICE_NAME: mysql
+      MYSQL_TCP_PORT: ${DB_PORT}
+      MYSQL_ALLOW_EMPTY_PASSWORD: 1
+    volumes:
+      - .docker/mysql/my.cnf:/etc/mysql/my.cnf
+      - .docker/data/mysql/mysql-data:/var/lib/mysql/
+      - .docker/data/mysql/mysql-files:/var/lib/mysql-files
+      #- ./dump.sql:/dump.sql
+    networks:
+      - app-network
+
+
+  # Mailhog service for work with smtp on localhost
+  mailhog:
+    container_name: diplom_mailhog
+    build:
+      context: ./
+      dockerfile: .docker/mailhog/Dockerfile
+    logging:
+      driver: 'none'
+    ports:
+      - "1025:1025" # smtp server
+      - "8025:8025" # web ui
+    networks:
+      - app-network
+
+  redis:
+    container_name: diplom_redis
+    image: 'redis:alpine'
+    ports:
+      - '6379:6379'
+    volumes:
+      - 'redis_data:/data'
+    networks:
+      - app-network
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      retries: 3
+      timeout: 5s
+
+#Docker networks
+networks:
+  app-network:
+    driver: bridge
+
+#Volumes
+volumes:
+  dbdata:
+    driver: local
+  redis_data:
+    driver: local
