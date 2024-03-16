@@ -1,0 +1,368 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Диплом API",
+    "description": "",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://127.0.0.1/api",
+      "description": "local-1"
+    },
+    {
+      "url": "http://192.168.11.62:80/api",
+      "description": "local-1"
+    }
+  ],
+  "securitySchemes": {
+    "BearerAuth": {
+      "type": "http",
+      "scheme": "bearer",
+      "bearerFormat": "JWT"
+    }
+  },
+  "paths": {
+    "/auth/me": {
+      "get": {
+        "tags": [
+          "Авторизация"
+        ],
+        "summary": "Получение информации о текущем пользователе",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Успешное получение информации о пользователе",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserResource"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedResponse"
+          }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "tags": [
+          "Авторизация"
+        ],
+        "summary": "Авторизация пользователя",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Успешная аутентификация",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResource"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Эти учетные данные не соответствуют нашим записям.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JsonApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/logout": {
+      "post": {
+        "tags": [
+          "Авторизация"
+        ],
+        "summary": "Выход текущего пользователя из системы",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Успешный выход пользователя из системы"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedResponse"
+          }
+        }
+      }
+    },
+    "/auth/refresh": {
+      "post": {
+        "tags": [
+          "Авторизация"
+        ],
+        "summary": "Обновить токен аутентификации",
+        "description": "Обновляет токен аутентификации для пользователя.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResource"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedResponse"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "parameters": {
+      "EmailParam": {
+        "name": "email",
+        "in": "query",
+        "description": "Email пользователя",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "format": "email"
+        },
+        "AuthorizationHeader": {
+          "name": "Authorization",
+          "in": "header",
+          "description": "Токен авторизации пользователя в формате Bearer <token>",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "responses": {
+      "UnauthorizedResponse": {
+        "description": "Неавторизованный доступ",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/JsonApiResponse"
+            }
+          }
+        }
+      }
+    },
+    "schemas": {
+      "UserResource": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "uuid",
+            "description": "Идентификатор пользователя."
+          },
+          "firstName": {
+            "type": "string",
+            "description": "Имя пользователя."
+          },
+          "lastName": {
+            "type": "string",
+            "description": "Фамилия пользователя."
+          },
+          "secondName": {
+            "type": "string",
+            "description": "Отчество пользователя."
+          },
+          "phone": {
+            "type": "string",
+            "description": "Номер телефона пользователя."
+          },
+          "email": {
+            "type": "string",
+            "description": "Электронная почта пользователя."
+          },
+          "avatar": {
+            "type": "string",
+            "description": "Ссылка на аватар пользователя."
+          },
+          "position": {
+            "type": "string",
+            "description": "Должность пользователя"
+          },
+          "description": {
+            "type": "string",
+            "description": "описание профиля пользователя"
+          },
+          "birthday": {
+            "type": "string",
+            "description": "День рождения пользователя"
+          },
+          "company_id": {
+            "type": "uuid",
+            "description": "Компания пользователя"
+          },
+          "department_id": {
+            "type": "uuid",
+            "description": "Департамент пользователя"
+          },
+          "role_id": {
+            "type": "uuid",
+            "description": "Роль пользователя"
+          },
+          "created_at": {
+            "type": "string",
+            "description": "Дата создания пользователя"
+          }
+        },
+        "example": {
+          "id": "0b5a250c-ef2c-3b7c-8260-6982603d196d",
+          "first_name": "Sabryna",
+          "last_name": "Kassulke",
+          "second_name": "Aufderhar",
+          "email": "marlen.kreiger@example.org",
+          "phone": "(732) 373-9833",
+          "avatar": "http://127.0.0.1/avatar.svg",
+          "position": "Transportation Equipment Painters",
+          "description": "Perferendis est sed voluptatem inventore quam et.",
+          "birthday": "Mon Jun 21 1993 00:00:00 GMT+0000",
+          "company_id": "0f486178-df9b-3851-97b6-4583d4ee1cad",
+          "department_id": "0ee5af1d-ba6c-3314-9cab-e34bbd59120a",
+          "role_id": "90df8c2a-a2f8-33a8-9a5c-5eaf8b8fb7ed",
+          "created_at": "Sat Mar 16 2024 12:38:40 GMT+0000"
+        }
+      },
+      "LoginRequest": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "password": {
+            "type": "string"
+          }
+        },
+        "example": {
+          "email": "john@example.com",
+          "password": "secret123"
+        }
+      },
+      "AuthResource": {
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string"
+          },
+          "tokenType": {
+            "type": "string"
+          },
+          "expires": {
+            "type": "string"
+          },
+          "user": {
+            "$ref": "#/components/schemas/UserResource"
+          }
+        },
+        "example": {
+          "success": true,
+          "data": {
+            "accessToken": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xL2FwaS9hdXRoL2xvZ2luIiwiaWF0IjoxNzEwNTk0ODU5LCJleHAiOjE3MTA1OTg0NTksIm5iZiI6MTcxMDU5NDg1OSwianRpIjoid0NlRVBxRXBHTFpORkMwViIsInN1YiI6IjBiNWEyNTBjLWVmMmMtM2I3Yy04MjYwLTY5ODI2MDNkMTk2ZCIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.YqdgB7AEneKxWHoCAaGTF-UaHnW4dTh2QAYHgtwnmVs",
+            "tokenType": "bearer",
+            "expires": "2024-03-16T14:14:19+00:00",
+            "user": {
+              "id": "0b5a250c-ef2c-3b7c-8260-6982603d196d",
+              "first_name": "Sabryna",
+              "last_name": "Kassulke",
+              "second_name": "Aufderhar",
+              "email": "marlen.kreiger@example.org",
+              "phone": "(732) 373-9833",
+              "avatar": "http://127.0.0.1/avatar.svg",
+              "position": "Transportation Equipment Painters",
+              "description": "Perferendis est sed voluptatem inventore quam et.",
+              "birthday": "Mon Jun 21 1993 00:00:00 GMT+0000",
+              "company_id": "0f486178-df9b-3851-97b6-4583d4ee1cad",
+              "department_id": "0ee5af1d-ba6c-3314-9cab-e34bbd59120a",
+              "role_id": "90df8c2a-a2f8-33a8-9a5c-5eaf8b8fb7ed",
+              "created_at": "Sat Mar 16 2024 12:38:40 GMT+0000"
+            }
+          },
+          "errors": []
+        }
+      },
+      "TokenResponse": {
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string"
+          },
+          "tokenType": {
+            "type": "string"
+          },
+          "expires": {
+            "type": "datetime"
+          },
+          "user": {
+            "$ref": "#/components/schemas/UserResource"
+          }
+        },
+        "required": [
+          "access_token",
+          "token_type",
+          "expires_in"
+        ]
+      },
+      "JsonApiResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "Флаг успешности выполнения запроса."
+          },
+          "data": {
+            "description": "Ресурс, полученный в результате выполнения запроса."
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "string",
+                  "description": "Код ошибки."
+                },
+                "message": {
+                  "type": "string",
+                  "description": "Описание ошибки."
+                }
+              }
+            },
+            "description": "Массив ошибок, если они есть. Если ошибок нет, то поле пустое."
+          }
+        }
+      }
+    }
+  }
+}
