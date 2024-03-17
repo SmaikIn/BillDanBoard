@@ -4,6 +4,7 @@ namespace App\Services\User;
 
 use App\Events\CreateUserEvent;
 use App\Services\User\Dto\CreateUserDto;
+use App\Services\User\Dto\UpdateUserDto;
 use App\Services\User\Dto\UserDto;
 use App\Services\User\Repositories\UserRepository;
 use Illuminate\Contracts\Events\Dispatcher;
@@ -35,5 +36,10 @@ final readonly class LaravelUserService implements UserService
         $this->dispatcher->dispatch(new CreateUserEvent($user->getId()));
 
         return $user;
+    }
+
+    public function update(UpdateUserDto $updateUserDto): UserDto
+    {
+        return $this->userRepository->update($updateUserDto);
     }
 }

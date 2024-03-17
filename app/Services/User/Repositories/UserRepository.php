@@ -7,6 +7,7 @@ use App\Domain\ValueObjects\Phone;
 use App\Domain\ValueObjects\Photo;
 use App\Models\User;
 use App\Services\User\Dto\CreateUserDto;
+use App\Services\User\Dto\UpdateUserDto;
 use App\Services\User\Dto\UserDto;
 use Carbon\Carbon;
 use Ramsey\Uuid\Uuid;
@@ -35,6 +36,24 @@ final class UserRepository
         $user->email = $createUserDto->getEmail()->value();
         $user->yandex_id = $createUserDto->getYandexId();
         $user->birthday = is_null($createUserDto->getBirthday()) ? $createUserDto->getBirthday() : $createUserDto->getBirthday()->toString();
+
+        $user->save();
+
+        return $this->formatUserDto($user);
+    }
+
+    public function update(UpdateUserDto $updateUserDto): UserDto
+    {
+        $user = User::where('uuid', $updateUserDto->getId()->toString())->firstOrFail();
+
+        $user->first_name = $updateUserDto->getFirstName();
+        $user->last_name = $updateUserDto->getLastName();
+        $user->second_name = $updateUserDto->getSecondName();
+        $user->phone = is_null($updateUserDto->getPhone()) ? $updateUserDto->getPhone() : $updateUserDto->getPhone()->value();
+        $user->avatar = $updateUserDto->getPhoto();
+        $user->email = $updateUserDto->getEmail()->value();
+        $user->birthday = is_null($updateUserDto->getBirthday()) ? $updateUserDto->getBirthday() : $updateUserDto->getBirthday()->toString();
+        $user->updated_at = now();
 
         $user->save();
 
