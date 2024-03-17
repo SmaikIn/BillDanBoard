@@ -25,12 +25,6 @@ Route::group(['prefix' => 'auth', 'middleware' => 'auth'], function () {
 });
 
 Route::get('/test', function () {
-    $users = User::all();
 
-    foreach ($users as $user) {
-        dd($user->companies);
-        $company = Company::inRandomOrder()->first();
-        $user->companies()->attach($company->uuid, ['user_id' => $user->uuid]);
-    }
 });
 

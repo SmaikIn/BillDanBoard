@@ -20,8 +20,8 @@ class ProfilesSeeder extends Seeder
             foreach ($companies as $company) {
                 Profile::create([
                     'uuid' => $faker->uuid,
-                    'first_name' => $user->firstName,
-                    'last_name' => $user->lastName,
+                    'first_name' => $user->first_name,
+                    'last_name' => $user->last_name,
                     'second_name' => $user->second_name,
                     'phone' => $user->phone,
                     'avatar' => $user->avatar,
@@ -30,8 +30,9 @@ class ProfilesSeeder extends Seeder
                     'position' => $faker->jobTitle,
                     'description' => $faker->sentence,
                     'company_id' => $company->uuid,
-                    'department_id' => $company->roles()->inRandomOrder()->first(),
-                    'role_id' => $company->department()->inRandomOrder()->first(),
+                    'user_id' => $user->uuid,
+                    'department_id' => $company->department()->inRandomOrder()->first()->uuid ?? null,
+                    'role_id' => $company->roles()->inRandomOrder()->first()->uuid ?? null,
                     'created_at' => now(),
                     'updated_at' => now(),
                 ]);

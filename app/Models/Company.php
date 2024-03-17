@@ -10,22 +10,22 @@ class Company extends ModelWithUuid
 
     public function users(): BelongsToMany
     {
-        return $this->belongsToMany(Company::class);
+        return $this->belongsToMany(User::class);
     }
 
     public function profiles(): HasMany
     {
-        return $this->HasMany(Profile::class);
+        return $this->HasMany(Profile::class, 'company_id', 'uuid');
     }
 
     public function roles(): HasMany
     {
-        return $this->HasMany(Role::class);
+        return $this->HasMany(Role::class, 'company_id', 'uuid');
     }
 
     public function department(): HasMany
     {
-        return $this->HasMany(Department::class);
+        return $this->HasMany(Department::class, 'company_id', 'uuid');
     }
 
 }
