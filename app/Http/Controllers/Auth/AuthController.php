@@ -76,6 +76,7 @@ class AuthController extends Controller
 
     protected function respondWithToken(JWTDto $token): JsonApiResponse
     {
+
         $userResource = new UserResource($this->userService->find($token->getPayload()->getUserId()));
         $tokenResource = new TokenResource($token);
 

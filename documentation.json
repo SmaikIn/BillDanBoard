@@ -140,6 +140,199 @@
           }
         }
       }
+    },
+    "/auth/register": {
+      "post": {
+        "tags": [
+          "Авторизация"
+        ],
+        "summary": "Регистрация нового пользователя",
+        "description": "Создает нового пользователя в системе",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "firstName": {
+                    "type": "string",
+                    "description": "Имя пользователя"
+                  },
+                  "lastName": {
+                    "type": "string",
+                    "description": "Фамилия пользователя"
+                  },
+                  "secondName": {
+                    "type": "string",
+                    "description": "Отчество пользователя (необязательно)"
+                  },
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "description": "Email пользователя"
+                  },
+                  "phone": {
+                    "type": "string",
+                    "description": "Номер телефона пользователя (необязательно)"
+                  },
+                  "avatar": {
+                    "type": "string",
+                    "description": "Ссылка на аватар пользователя (файл)"
+                  },
+                  "birthday": {
+                    "type": "string",
+                    "format": "date",
+                    "description": "Дата рождения пользователя (необязательно)"
+                  },
+                  "password": {
+                    "type": "string",
+                    "description": "Пароль пользователя (минимум 6 символов)"
+                  },
+                  "yandexId": {
+                    "type": "string",
+                    "description": "Yandex ID пользователя (необязательно)"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Успешное получение информации о пользователе",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserResource"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "auth/updateAccount/{uuid}": {
+      "patch": {
+        "summary": "Update an account by UUID",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "path",
+            "required": true,
+            "description": "UUID of the account to update",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "firstName": {
+                    "type": "string"
+                  },
+                  "lastName": {
+                    "type": "string"
+                  },
+                  "secondName": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string",
+                    "format": "email"
+                  },
+                  "phone": {
+                    "type": "string"
+                  },
+                  "avatar": {
+                    "type": "file"
+                  },
+                  "birthday": {
+                    "type": "string",
+                    "format": "date"
+                  },
+                  "yandexId": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Успешное получение информации о пользователе",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserResource"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "auth/deleteAccount/{uuid}": {
+      "delete": {
+        "summary": "Удаление аккаунта",
+        "description": "Удаляет аккаунт пользователя по указанному UUID.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "uuid",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Уникальный идентификатор аккаунта пользователя."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Успешное удаление аккаунта.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {}
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Ошибка доступа. Пользователь не имеет прав на удаление данного аккаунта.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "403"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {

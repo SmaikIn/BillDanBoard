@@ -13,7 +13,7 @@ return new class extends Migration {
             $table->foreignIdFor(Company::class)->references('uuid')->on('companies')->onDelete('cascade');
             $table->foreignIdFor(User::class)->references('uuid')->on('users')->onDelete('cascade');
 
-            $table->unique(['company_id', 'user_id']);
+            $table->unique(['company_uuid', 'user_uuid']);
             $table->timestamps();
         });
     }

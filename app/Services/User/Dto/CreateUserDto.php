@@ -5,30 +5,25 @@ declare(strict_types=1);
 namespace App\Services\User\Dto;
 
 use App\Domain\ValueObjects\Email;
+use App\Domain\ValueObjects\Password;
 use App\Domain\ValueObjects\Phone;
 use App\Domain\ValueObjects\Photo;
 use Carbon\Carbon;
 use Ramsey\Uuid\UuidInterface;
 
-final readonly class UserDto
+final readonly class CreateUserDto
 {
     public function __construct(
-        private UuidInterface $id,
         private string $firstName,
         private string $lastName,
         private ?string $secondName,
         private ?Phone $phone,
-        private Photo $photo,
+        private Password $password,
+        private ?string $photo,
         private Email $email,
         private ?string $yandexId,
         private ?Carbon $birthday,
-        private Carbon $createdAt
     ) {
-    }
-
-    public function getId(): UuidInterface
-    {
-        return $this->id;
     }
 
     public function getFirstName(): string
@@ -51,7 +46,7 @@ final readonly class UserDto
         return $this->phone;
     }
 
-    public function getPhoto(): Photo
+    public function getPhoto(): ?string
     {
         return $this->photo;
     }
@@ -60,6 +55,7 @@ final readonly class UserDto
     {
         return $this->email;
     }
+
     public function getYandexId(): ?string
     {
         return $this->yandexId;
@@ -70,9 +66,9 @@ final readonly class UserDto
         return $this->birthday;
     }
 
-    public function getCreatedAt(): Carbon
+    public function getPassword(): Password
     {
-        return $this->createdAt;
+        return $this->password;
     }
 
 }

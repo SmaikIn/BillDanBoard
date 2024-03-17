@@ -10,7 +10,7 @@ use App\Domain\ValueObjects\Photo;
 use Carbon\Carbon;
 use Ramsey\Uuid\UuidInterface;
 
-final readonly class UserDto
+final readonly class UpdateUserDto
 {
     public function __construct(
         private UuidInterface $id,
@@ -18,11 +18,9 @@ final readonly class UserDto
         private string $lastName,
         private ?string $secondName,
         private ?Phone $phone,
-        private Photo $photo,
+        private ?string $photo,
         private Email $email,
-        private ?string $yandexId,
         private ?Carbon $birthday,
-        private Carbon $createdAt
     ) {
     }
 
@@ -51,7 +49,7 @@ final readonly class UserDto
         return $this->phone;
     }
 
-    public function getPhoto(): Photo
+    public function getPhoto(): ?string
     {
         return $this->photo;
     }
@@ -60,19 +58,10 @@ final readonly class UserDto
     {
         return $this->email;
     }
-    public function getYandexId(): ?string
-    {
-        return $this->yandexId;
-    }
 
     public function getBirthday(): ?Carbon
     {
         return $this->birthday;
-    }
-
-    public function getCreatedAt(): Carbon
-    {
-        return $this->createdAt;
     }
 
 }
