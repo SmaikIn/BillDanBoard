@@ -10,11 +10,11 @@ return new class extends Migration {
     {
         Schema::create('roles', function (Blueprint $table) {
             $table->uuid()->primary();
-            $table->uuid('company_id')->change();
+            $table->uuid('company_uuid')->change();
             $table->string('name');
 
             $table->foreignIdFor(Company::class)->references('uuid')->on('companies')->onDelete('cascade');
-            $table->unique(['company_id', 'name']);
+            $table->unique(['company_uuid', 'name']);
             $table->timestamps();
         });
     }

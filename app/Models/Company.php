@@ -15,17 +15,17 @@ class Company extends ModelWithUuid
 
     public function profiles(): HasMany
     {
-        return $this->HasMany(Profile::class, 'company_id', 'uuid');
+        return $this->HasMany(Profile::class, 'company_uuid', 'uuid');
     }
 
     public function roles(): HasMany
     {
-        return $this->HasMany(Role::class, 'company_id', 'uuid');
+        return $this->HasMany(Role::class, 'company_uuid', 'uuid');
     }
 
     public function department(): HasMany
     {
-        return $this->HasMany(Department::class, 'company_id', 'uuid');
+        return $this->HasMany(Department::class, 'company_uuid', 'uuid');
     }
 
 }

@@ -41,6 +41,13 @@ final class UserRepository
         return $this->formatUserDto($user);
     }
 
+    public function delete(UuidInterface $userId): bool
+    {
+        $user = User::where('uuid', $userId->toString())->firstOrFail();
+
+        return $user->delete();
+    }
+
     private function formatUserDto(User $user): UserDto
     {
         return new UserDto(

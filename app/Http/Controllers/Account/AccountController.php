@@ -6,8 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Account\CreateAccountRequest;
 use App\Http\Resources\User\UserResource;
 use App\Http\Responses\JsonApiResponse;
+use App\Http\Responses\JsonErrorResponse;
 use App\Services\User\UserService;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Ramsey\Uuid\Uuid;
 
 class AccountController extends Controller
 {
@@ -31,15 +34,22 @@ class AccountController extends Controller
         return new JsonApiResponse($userResource->toArray($request));
     }
 
-    public function show($id)
+    public function update(Request $request)
     {
     }
 
-    public function update(Request $request, $id)
+    public function destroy($uuid)
     {
-    }
+        if (\Auth::id() != $uuid) {
+            return new JsonErrorResponse(__('403'), status: Response::HTTP_FORBIDDEN);
+        }
 
-    public function destroy($id)
-    {
+        $result = $this->userService->delete(Uuid::fromString($uuid));
+
+        if ($result) {
+            return new JsonApiResponse([]);
+        }
+
+        return new JsonErrorResponse('try Again');
     }
 }

@@ -24,7 +24,7 @@ class UserResource extends JsonResource
             'email' => $user->getEmail()->value(),
             'phone' => is_null($user->getPhone()) ? null : $user->getPhone()->value(),
             'avatar' => $user->getPhoto()->getUrl(),
-            'birthday' => is_null($user->getPhone()) ? null : $user->getBirthday()->toString(),
+            'birthday' => is_null($user->getBirthday()) ? null : $user->getBirthday()->toString(),
             'created_at' => $user->getCreatedAt()->toString(),
         ];
     }

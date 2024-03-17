@@ -14,6 +14,8 @@ interface UserService
      */
     public function find(UuidInterface $userId): UserDto;
 
+    public function delete(UuidInterface $userId): bool;
+
     public function create(CreateUserDto $createUserDto);
 
 }

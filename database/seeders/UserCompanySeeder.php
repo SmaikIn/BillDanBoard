@@ -14,7 +14,7 @@ class UserCompanySeeder extends Seeder
 
         foreach ($users as $user) {
             $company = Company::inRandomOrder()->first();
-            $user->companies()->attach($company->uuid, ['user_id' => $user->uuid]);
+            $user->companies()->attach($company->uuid);
         }
     }
 }

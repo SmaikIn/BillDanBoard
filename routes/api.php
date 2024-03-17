@@ -20,7 +20,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(['prefix' => 'auth', 'middleware' => 'auth'], function () {
     Route::post('register', [AccountController::class, 'store'])->withoutMiddleware(['auth']);
-
+    Route::patch('updateAccount/{uuid}', [AccountController::class, 'update']);
+    Route::delete('deleteAccount/{uuid}', [AccountController::class, 'destroy']);
 
     Route::post('login', [AuthController::class, 'login'])->withoutMiddleware(['auth']);
     Route::post('logout', [AuthController::class, 'logout']);

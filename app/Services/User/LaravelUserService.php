@@ -19,7 +19,13 @@ final readonly class LaravelUserService implements UserService
 
     public function find(UuidInterface $userId): UserDto
     {
+
         return $this->userRepository->find($userId);
+    }
+
+    public function delete(UuidInterface $userId): bool
+    {
+        return  $this->userRepository->delete($userId);
     }
 
     public function create(CreateUserDto $createUserDto)

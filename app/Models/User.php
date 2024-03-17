@@ -18,7 +18,7 @@ class User extends Authenticatable implements JWTSubject
     public $incrementing = false;
 
     protected $keyType = 'string';
-
+    protected $primaryKey = 'uuid';
 
     /**
      * The attributes that are mass assignable.
@@ -63,11 +63,11 @@ class User extends Authenticatable implements JWTSubject
 
     public function companies(): BelongsToMany
     {
-        return $this->belongsToMany(Company::class,'company_user', 'user_id', 'company_id', 'uuid', 'uuid');
+        return $this->belongsToMany(Company::class, 'company_user', 'user_uuid', 'company_uuid', 'uuid', 'uuid');
     }
 
     public function profiles(): HasMany
     {
-        return $this->HasMany(Profile::class,  'user_id', 'uuid');
+        return $this->HasMany(Profile::class, 'user_uuid', 'uuid');
     }
 }
