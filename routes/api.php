@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Account\AccountController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Models\Company;
 use App\Models\User;
@@ -18,13 +19,12 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::group(['prefix' => 'auth', 'middleware' => 'auth'], function () {
+    Route::post('register', [AccountController::class, 'store'])->withoutMiddleware(['auth']);
+
+
     Route::post('login', [AuthController::class, 'login'])->withoutMiddleware(['auth']);
     Route::post('logout', [AuthController::class, 'logout']);
     Route::post('refresh', [AuthController::class, 'refresh'])->withoutMiddleware(['auth']);
     Route::get('me', [AuthController::class, 'me']);
-});
-
-Route::get('/test', function () {
-
 });
 

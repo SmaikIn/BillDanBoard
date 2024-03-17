@@ -22,9 +22,9 @@ class UserResource extends JsonResource
             'last_name' => $user->getLastName(),
             'second_name' => $user->getSecondName(),
             'email' => $user->getEmail()->value(),
-            'phone' => $user->getPhone()->value(),
+            'phone' => is_null($user->getPhone()) ? null : $user->getPhone()->value(),
             'avatar' => $user->getPhoto()->getUrl(),
-            'birthday' => $user->getBirthday()->toString(),
+            'birthday' => is_null($user->getPhone()) ? null : $user->getBirthday()->toString(),
             'created_at' => $user->getCreatedAt()->toString(),
         ];
     }
