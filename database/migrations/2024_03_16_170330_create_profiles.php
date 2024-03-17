@@ -13,10 +13,10 @@ return new class extends Migration {
     {
         Schema::create('profiles', function (Blueprint $table) {
             $table->uuid()->primary();
-            $table->uuid('company_id')->change();
-            $table->uuid('user_id')->change();
-            $table->uuid('department_id')->nullable()->change();
-            $table->uuid('role_id')->nullable()->change();
+            $table->uuid('company_uuid')->change();
+            $table->uuid('user_uuid')->change();
+            $table->uuid('department_uuid')->nullable()->change();
+            $table->uuid('role_uuid')->nullable()->change();
 
             $table->foreignIdFor(Company::class)->references('uuid')->on('companies')->onDelete('cascade');
             $table->foreignIdFor(User::class)->references('uuid')->on('users')->onDelete('cascade');
@@ -34,7 +34,7 @@ return new class extends Migration {
             $table->date('birthday')->nullable();
             $table->boolean('is_active')->default(true);
 
-            $table->unique(['company_id', 'user_id']);
+            $table->unique(['company_uuid', 'user_uuid']);
             $table->timestamps();
         });
     }

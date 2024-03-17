@@ -19,7 +19,7 @@ class DepartmentsSeeder extends Seeder
             for ($i = 0; $i < 5; $i++) { // Создаем 5 отделов для каждой компании
                 Department::create([
                     'uuid' => $faker->uuid,
-                    'company_id' => $company->uuid,
+                    'company_uuid' => $company->uuid,
                     'name' => $faker->unique()->word // Генерируем уникальное название отдела
                 ]);
             }

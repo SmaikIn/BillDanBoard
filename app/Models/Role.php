@@ -9,6 +9,6 @@ class Role extends ModelWithUuid
 
     public function company(): BelongsTo
     {
-        return $this->belongsTo(Company::class, 'company_id', 'uuid');
+        return $this->belongsTo(Company::class, 'company_uuid', 'uuid');
     }
 }
