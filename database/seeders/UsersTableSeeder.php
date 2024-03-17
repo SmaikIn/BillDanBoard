@@ -16,18 +16,12 @@ class UsersTableSeeder extends Seeder
 
         foreach (range(1, 10) as $index) {
             DB::table('users')->insert([
-                'id' => $faker->uuid,
+                'uuid' => $faker->uuid,
                 'first_name' => $faker->firstName,
                 'last_name' => $faker->lastName,
                 'second_name' => $faker->lastName,
                 'phone' => $faker->phoneNumber,
                 'avatar' => 'avatar.svg',
-                'position' => $faker->jobTitle,
-                'description' => $faker->sentence,
-                'birthday' => $faker->date,
-                'company_id' => $faker->uuid,
-                'department_id' => $faker->uuid,
-                'role_id' => $faker->uuid,
                 'yandex_id' => $faker->numberBetween(1000, 9999),
                 'email' => $faker->unique()->safeEmail,
                 'email_verified_at' => now(),

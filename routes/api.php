@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthController;
+use App\Models\Company;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -22,14 +24,7 @@ Route::group(['prefix' => 'auth', 'middleware' => 'auth'], function () {
     Route::get('me', [AuthController::class, 'me']);
 });
 
-Route::group(['prefix' => 'account', 'middleware' => 'auth'], function () {
-});
 Route::get('/test', function () {
-    return "<img src='".asset('avatar.svg')."' alt='Avatar'>";
 
-    return 'Даня говно API моё работает';
-});
-Route::get('yandex/callback', function () {
-    return 'Даня говно API моё работает';
 });
 

@@ -20,11 +20,6 @@ final readonly class UserDto
         private Phone $phone,
         private Photo $photo,
         private Email $email,
-        private string $position,
-        private string $description,
-        private UuidInterface $companyId,
-        private UuidInterface $departmentId,
-        private UuidInterface $roleId,
         private ?string $yandexId,
         private Carbon $birthday,
         private Carbon $createdAt
@@ -74,21 +69,6 @@ final readonly class UserDto
     public function getDescription(): string
     {
         return $this->description;
-    }
-
-    public function getCompanyId(): UuidInterface
-    {
-        return $this->companyId;
-    }
-
-    public function getRoleId(): UuidInterface
-    {
-        return $this->roleId;
-    }
-
-    public function getDepartmentId(): UuidInterface
-    {
-        return $this->departmentId;
     }
 
     public function getYandexId(): ?string

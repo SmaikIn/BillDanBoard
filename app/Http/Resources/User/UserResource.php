@@ -24,12 +24,7 @@ class UserResource extends JsonResource
             'email' => $user->getEmail()->value(),
             'phone' => $user->getPhone()->value(),
             'avatar' => $user->getPhoto()->getUrl(),
-            'position' => $user->getPosition(),
-            'description' => $user->getDescription(),
             'birthday' => $user->getBirthday()->toString(),
-            'company_id' => $user->getCompanyId()->toString(),
-            'department_id' => $user->getDepartmentId()->toString(),
-            'role_id' => $user->getRoleId()->toString(),
             'created_at' => $user->getCreatedAt()->toString(),
         ];
     }
