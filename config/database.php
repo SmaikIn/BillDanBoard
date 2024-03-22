@@ -93,6 +93,17 @@ return [
             // 'trust_server_certificate' => env('DB_TRUST_SERVER_CERTIFICATE', 'false'),
         ],
 
+        'clickhouse' => [
+            'driver' => 'clickhouse',
+            'host' => env('CLICKHOUSE_HOST', 'localhost'),
+            'port' => env('CLICKHOUSE_PORT', 8123),
+            'database' => env('CLICKHOUSE_DATABASE'),
+            'username' => env('CLICKHOUSE_USER'),
+            'password' => env('CLICKHOUSE_PASSWORD'),
+            'options' => []
+        ],
+
+
     ],
 
     /*

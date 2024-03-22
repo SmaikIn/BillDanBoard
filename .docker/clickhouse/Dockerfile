@@ -1,1 +1,1 @@
-FROM bitnami/clickhouse
+FROM clickhouse/clickhouse-server

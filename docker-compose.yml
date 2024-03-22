@@ -74,13 +74,14 @@ services:
       dockerfile: .docker/clickhouse/Dockerfile
     container_name: diplom_clickhouse
     ports:
-      - "8123:8123" # ClickHouse HTTP port
-      - "9000:9000" # ClickHouse TCP port
+      - "8123:8123" # Порт для HTTP-интерфейса ClickHouse
+      - "9000:9000" # Порт для TCP-интерфейса ClickHouse
     environment:
       CLICKHOUSE_USER: '${CLICKHOUSE_USER}'
       CLICKHOUSE_PASSWORD: '${CLICKHOUSE_PASSWORD}'
+      CLICKHOUSE_DATABASE: '${CLICKHOUSE_PASSWORD}'
     volumes:
-      - .docker/clickhouse/data:/opt/clickhouse/data
+      - .docker/clickhouse/data:/etc/clickhouse-server/config.d # Монтирование конфигурационных файлов
     networks:
       - app-network
 
