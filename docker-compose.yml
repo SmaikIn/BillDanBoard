@@ -67,6 +67,22 @@ services:
     networks:
       - app-network
 
+  # ClickHouse service
+  clickhouse:
+    build:
+      context: ./
+      dockerfile: .docker/clickhouse/Dockerfile
+    container_name: diplom_clickhouse
+    ports:
+      - "8123:8123" # ClickHouse HTTP port
+      - "9000:9000" # ClickHouse TCP port
+    environment:
+      CLICKHOUSE_USER: '${CLICKHOUSE_USER}'
+      CLICKHOUSE_PASSWORD: '${CLICKHOUSE_PASSWORD}'
+    volumes:
+      - .docker/clickhouse/data:/opt/clickhouse/data
+    networks:
+      - app-network
 
   # Mailhog service for work with smtp on localhost
   mailhog:

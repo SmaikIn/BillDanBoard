@@ -50,6 +50,14 @@ RUN apt-get update \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
+# Установка ClickHouse
+RUN apt-get update \
+    && apt-get install -y wget gnupg
+RUN wget -qO - https://repo.clickhouse.tech/CLICKHOUSE-KEY.GPG | apt-key add -
+RUN echo "deb http://repo.clickhouse.tech/deb/stable/ main/" | tee /etc/apt/sources.list.d/clickhouse.list
+RUN apt-get update \
+    && apt-get install -y clickhouse-client clickhouse-server
+
 RUN npm install --save-dev chokidar
 
 RUN setcap "cap_net_bind_service=+ep" /usr/bin/php8.2
