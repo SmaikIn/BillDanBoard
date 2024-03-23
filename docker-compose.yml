@@ -57,7 +57,7 @@ services:
       MYSQL_ROOT_PASSWORD: '${DB_PASSWORD}'
       SERVICE_TAGS: dev
       SERVICE_NAME: mysql
-      MYSQL_TCP_PORT: ${DB_PORT}
+      MYSQL_TCP_PORT: '${DB_PORT}'
       MYSQL_ALLOW_EMPTY_PASSWORD: 1
     volumes:
       - .docker/mysql/my.cnf:/etc/mysql/my.cnf
@@ -77,11 +77,8 @@ services:
       - "8123:8123" # Порт для HTTP-интерфейса ClickHouse
       - "9000:9000" # Порт для TCP-интерфейса ClickHouse
     environment:
-      CLICKHOUSE_USER: '${CLICKHOUSE_USER}'
-      CLICKHOUSE_PASSWORD: '${CLICKHOUSE_PASSWORD}'
-      CLICKHOUSE_DATABASE: '${CLICKHOUSE_PASSWORD}'
-    volumes:
-      - .docker/clickhouse/data:/etc/clickhouse-server/config.d # Монтирование конфигурационных файлов
+      CLICKHOUSE_ADMIN_USER: '${CLICKHOUSE_ADMIN_USER}'
+      CLICKHOUSE_ADMIN_PASSWORD: '${CLICKHOUSE_ADMIN_PASSWORD}'
     networks:
       - app-network
 

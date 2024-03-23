@@ -98,11 +98,10 @@ return [
             'host' => env('CLICKHOUSE_HOST', 'localhost'),
             'port' => env('CLICKHOUSE_PORT', 8123),
             'database' => env('CLICKHOUSE_DATABASE'),
-            'username' => env('CLICKHOUSE_USER'),
-            'password' => env('CLICKHOUSE_PASSWORD'),
+            'username' => env('CLICKHOUSE_ADMIN_USER'),
+            'password' => env('CLICKHOUSE_ADMIN_PASSWORD'),
             'options' => []
         ],
-
 
     ],
 
