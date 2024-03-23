@@ -96,11 +96,17 @@ return [
         'clickhouse' => [
             'driver' => 'clickhouse',
             'host' => env('CLICKHOUSE_HOST', 'localhost'),
-            'port' => env('CLICKHOUSE_PORT', 8123),
+            'port' => env('CLICKHOUSE_PORT', '8123'),
             'database' => env('CLICKHOUSE_DATABASE'),
             'username' => env('CLICKHOUSE_ADMIN_USER'),
             'password' => env('CLICKHOUSE_ADMIN_PASSWORD'),
-            'options' => []
+            'timeout_connect' => env('CLICKHOUSE_TIMEOUT_CONNECT',2),
+            'timeout_query' => env('CLICKHOUSE_TIMEOUT_QUERY',2),
+            'https' => (bool)env('CLICKHOUSE_HTTPS', false),
+            'retries' => env('CLICKHOUSE_RETRIES', 0),
+            'settings' => [ // optional
+                'max_partitions_per_insert_block' => 300,
+            ],
         ],
 
     ],
