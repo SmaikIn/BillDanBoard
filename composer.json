@@ -12,6 +12,7 @@
         "laravel/sanctum": "^3.3",
         "laravel/socialite": "^5.12",
         "laravel/tinker": "^2.8",
+        "predis/predis": "^2.2",
         "smi2/phpclickhouse": "^1.5",
         "socialiteproviders/manager": "*",
         "tymon/jwt-auth": "^2.1"

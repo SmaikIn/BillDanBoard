@@ -8,21 +8,18 @@ use App\Domain\ValueObjects\Kpp;
 use App\Domain\ValueObjects\Phone;
 use Ramsey\Uuid\UuidInterface;
 
-final readonly class CompanyDto
+final readonly class CreateCompanyDto
 {
     /**
-     * @param  UuidInterface  $uuid
      * @param  string  $name
      * @param  Inn  $inn
-     * @param  Kpp  $kpp
+     * @param  Kpp|null  $kpp
      * @param  Email  $email
      * @param  Phone  $phone
-     * @param  string  $url
-     * @param  string  $description
-     * @param  bool  $isActive
+     * @param  string|null  $url
+     * @param  string|null  $description
      */
     public function __construct(
-        private UuidInterface $uuid,
         private string $name,
         private Inn $inn,
         private ?Kpp $kpp,
@@ -30,7 +27,6 @@ final readonly class CompanyDto
         private Phone $phone,
         private ?string $url,
         private ?string $description,
-        private bool $isActive,
     ) {
     }
 

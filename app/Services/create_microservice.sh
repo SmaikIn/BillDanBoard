@@ -16,8 +16,11 @@ cat <<EOF > Laravel${serviceName}Service.php
 <?php
 
 namespace App\Services\\${serviceName};
-final class Laravel${serviceName}Service implements ${serviceName}Service
+final readonly class Laravel${serviceName}Service implements ${serviceName}Service
 {
+    public function __construct(
+    ){
+    }
     public function find(){
       return null;
     }
@@ -57,7 +60,7 @@ cat <<EOF > Dto/${serviceName}Dto.php
 <?php
 
 namespace App\Services\\${serviceName}\Dto;
-final class ${serviceName}Dto
+final readonly class ${serviceName}Dto
 {
     public function __construct(
     ){
@@ -79,7 +82,7 @@ cat <<EOF > Repositories/Database${serviceName}Repository.php
 <?php
 
 namespace App\Services\\${serviceName}\Repositories;
-final class Database${serviceName}Repository implements ${serviceName}Repository
+final readonly class Database${serviceName}Repository implements ${serviceName}Repository
 {
     public function __construct(
     ){
@@ -91,7 +94,7 @@ cat <<EOF > Repositories/Cache${serviceName}Repository.php
 <?php
 
 namespace App\Services\\${serviceName}\Repositories;
-final class Cache${serviceName}Repository implements ${serviceName}Repository
+final readonly class Cache${serviceName}Repository implements ${serviceName}Repository
 {
     public function __construct(
     ){

@@ -2,9 +2,9 @@
 
 namespace App\Listeners;
 
-use App\Events\CreateUserEvent;
 use App\Services\Mail\Dto\UserDto;
 use App\Services\Mail\MailService;
+use App\Services\User\Events\CreateUserEvent;
 use App\Services\User\UserService;
 
 final readonly class CreateUserListener

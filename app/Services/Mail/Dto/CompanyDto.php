@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Company\Dto;
+namespace App\Services\Mail\Dto;
 
 use App\Domain\ValueObjects\Email;
 use App\Domain\ValueObjects\Inn;
@@ -11,18 +11,15 @@ use Ramsey\Uuid\UuidInterface;
 final readonly class CompanyDto
 {
     /**
-     * @param  UuidInterface  $uuid
      * @param  string  $name
      * @param  Inn  $inn
-     * @param  Kpp  $kpp
+     * @param  Kpp|null  $kpp
      * @param  Email  $email
      * @param  Phone  $phone
-     * @param  string  $url
-     * @param  string  $description
-     * @param  bool  $isActive
+     * @param  string|null  $url
+     * @param  string|null  $description
      */
     public function __construct(
-        private UuidInterface $uuid,
         private string $name,
         private Inn $inn,
         private ?Kpp $kpp,
@@ -30,13 +27,7 @@ final readonly class CompanyDto
         private Phone $phone,
         private ?string $url,
         private ?string $description,
-        private bool $isActive,
     ) {
-    }
-
-    public function getUuid(): UuidInterface
-    {
-        return $this->uuid;
     }
 
     public function getName(): string
@@ -72,10 +63,5 @@ final readonly class CompanyDto
     public function getDescription(): ?string
     {
         return $this->description;
-    }
-
-    public function isActive(): bool
-    {
-        return $this->isActive;
     }
 }

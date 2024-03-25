@@ -67,6 +67,30 @@ final class UserRepository
         return $user->delete();
     }
 
+    /**
+     * @param  UuidInterface  $userId
+     * @return string[]
+     */
+    public function getCompanyIds(UuidInterface $userId): array
+    {
+        $user = User::where('uuid', $userId->toString())->firstOrFail();
+
+        return $user->companies->pluck('uuid')->toArray();
+    }
+
+    /**
+     * @param  UuidInterface  $companyId
+     * @return UserDto
+     */
+    public function firstUserInCompany(UuidInterface $companyId): UserDto
+    {
+        $dbUser = User::whereHas('companies', function ($query) use ($companyId) {
+            $query->where('uuid', $companyId->toString());
+        })->first();
+
+        return $this->formatUserDto($dbUser);
+    }
+
     private function formatUserDto(User $user): UserDto
     {
         return new UserDto(

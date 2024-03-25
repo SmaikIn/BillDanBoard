@@ -4,6 +4,10 @@ namespace App\Providers;
 
 use App\Services\Auth\AuthService;
 use App\Services\Auth\LaravelAuthService;
+use App\Services\Company\CompanyService;
+use App\Services\Company\LaravelCompanyService;
+use App\Services\Company\Repositories\CacheCompanyRepository;
+use App\Services\Company\Repositories\CompanyRepository;
 use App\Services\Mail\LaravelMailService;
 use App\Services\Mail\MailService;
 use App\Services\User\LaravelUserService;
@@ -32,6 +36,9 @@ class AppServiceProvider extends ServiceProvider
             return auth()->guard();
         });
         $this->app->singleton(AuthService::class, LaravelAuthService::class);
+
+        $this->app->singleton(CompanyService::class, LaravelCompanyService::class);
+        $this->app->singleton(CompanyRepository::class, CacheCompanyRepository::class);
 
         $this->app->singleton(UserService::class, LaravelUserService::class);
         $this->app->singleton(MailService::class, LaravelMailService::class);
