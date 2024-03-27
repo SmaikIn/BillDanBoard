@@ -9,6 +9,7 @@ use App\Domain\ValueObjects\Phone;
 use App\Models\Company;
 use App\Services\Company\Dto\CompanyDto;
 use App\Services\Company\Dto\CreateCompanyDto;
+use App\Services\Company\Dto\UpdateCompanyDto;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 
@@ -34,6 +35,32 @@ final class DatabaseCompanyRepository implements CompanyRepository
         );
 
         return $this->formatCompanyDto($company);
+    }
+
+    public function update(UpdateCompanyDto $updateCompanyDto): CompanyDto
+    {
+        $dbCompany = Company::where('uuid', $updateCompanyDto->getUuid()->toString())->firstOrFail();
+
+        $dbCompany->name = $updateCompanyDto->getName();
+        $dbCompany->inn = $updateCompanyDto->getInn();
+        $dbCompany->kpp = $updateCompanyDto->getKpp();
+        $dbCompany->email = $updateCompanyDto->getEmail()->value();
+        $dbCompany->phone = $updateCompanyDto->getPhone()->value();
+        $dbCompany->website = $updateCompanyDto->getUrl();
+        $dbCompany->description = $updateCompanyDto->getDescription();
+        $dbCompany->is_active = $updateCompanyDto->isActive();
+        $dbCompany->save();
+
+        return $this->formatCompanyDto($dbCompany);
+    }
+
+    /**
+     * @param  UuidInterface  $companyId
+     * @return bool
+     */
+    public function delete(UuidInterface $companyId): bool
+    {
+        return Company::where('uuid', $companyId->toString())->delete();
     }
 
     /**

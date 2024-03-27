@@ -19,7 +19,8 @@ return [
     'company' =>
         [
             'exists' => "company already exists ",
-            'not exists' => "company not exists"
+            'not exists' => "company not exists",
+            'wrong' => 'error when delete'
         ],
     'user' =>
         [

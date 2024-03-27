@@ -4,6 +4,7 @@ namespace App\Services\Company\Repositories;
 
 use App\Services\Company\Dto\CompanyDto;
 use App\Services\Company\Dto\CreateCompanyDto;
+use App\Services\Company\Dto\UpdateCompanyDto;
 use Carbon\Carbon;
 use Carbon\CarbonInterface;
 use Illuminate\Cache\Repository;
@@ -71,6 +72,25 @@ final readonly class CacheCompanyRepository implements CompanyRepository
     public function create(CreateCompanyDto $createCompanyDto): CompanyDto
     {
         return $this->databaseCompanyRepository->create($createCompanyDto);
+    }
+
+    public function update(UpdateCompanyDto $updateCompanyDto): CompanyDto
+    {
+        $dbCompany = $this->databaseCompanyRepository->update($updateCompanyDto);
+
+        $this->cache->put($this->getKeyForCache($dbCompany->getUuid()->toString()), $dbCompany,
+            Carbon::parse(self::CACHE_TTL_DAYS.' days'));
+
+        return $dbCompany;
+    }
+
+    public function delete(UuidInterface $companyId): bool
+    {
+        $result = $this->databaseCompanyRepository->delete($companyId);
+
+        $this->cache->forget($this->getKeyForCache($companyId->toString()));
+
+        return $result;
     }
 
     private function getKeyForCache(string $companyId): string

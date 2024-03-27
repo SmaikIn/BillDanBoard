@@ -6,10 +6,12 @@ use App\Domain\ValueObjects\Email;
 use App\Domain\ValueObjects\Inn;
 use App\Domain\ValueObjects\Kpp;
 use App\Domain\ValueObjects\Phone;
+use Ramsey\Uuid\UuidInterface;
 
-final readonly class CreateCompanyDto
+final readonly class UpdateCompanyDto
 {
     /**
+     * @param  UuidInterface  $uuid
      * @param  string  $name
      * @param  Inn  $inn
      * @param  Kpp|null  $kpp
@@ -17,8 +19,10 @@ final readonly class CreateCompanyDto
      * @param  Phone  $phone
      * @param  string|null  $url
      * @param  string|null  $description
+     * @param  bool  $isActive
      */
     public function __construct(
+        private UuidInterface $uuid,
         private string $name,
         private Inn $inn,
         private ?Kpp $kpp,
@@ -26,7 +30,13 @@ final readonly class CreateCompanyDto
         private Phone $phone,
         private ?string $url,
         private ?string $description,
+        private bool $isActive,
     ) {
+    }
+
+    public function getUuid(): UuidInterface
+    {
+        return $this->uuid;
     }
 
     public function getName(): string

@@ -4,6 +4,7 @@ namespace App\Services\Company;
 
 use App\Services\Company\Dto\CompanyDto;
 use App\Services\Company\Dto\CreateCompanyDto;
+use App\Services\Company\Dto\UpdateCompanyDto;
 use Ramsey\Uuid\UuidInterface;
 
 interface CompanyService
@@ -16,9 +17,9 @@ interface CompanyService
 
     public function findMany(array $companyIds);
 
-    public function delete();
+    public function delete(UuidInterface $companyId);
 
     public function create(CreateCompanyDto $createCompanyDto);
 
-    public function update();
+    public function update(UpdateCompanyDto $updateCompanyDto);
 }

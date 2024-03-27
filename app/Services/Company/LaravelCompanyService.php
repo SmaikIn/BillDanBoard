@@ -4,6 +4,7 @@ namespace App\Services\Company;
 
 use App\Services\Company\Dto\CompanyDto;
 use App\Services\Company\Dto\CreateCompanyDto;
+use App\Services\Company\Dto\UpdateCompanyDto;
 use App\Services\Company\Events\CreateCompanyEvent;
 use App\Services\Company\Repositories\CompanyRepository;
 use Illuminate\Events\Dispatcher;
@@ -41,13 +42,13 @@ final readonly class LaravelCompanyService implements CompanyService
         return $company;
     }
 
-    public function update()
+    public function update(UpdateCompanyDto $updateCompanyDto): CompanyDto
     {
-        return null;
+        return $this->companyRepository->update($updateCompanyDto);
     }
 
-    public function delete()
+    public function delete(UuidInterface $companyId): bool
     {
-        return null;
+        return $this->companyRepository->delete($companyId);
     }
 }
