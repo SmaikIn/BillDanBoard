@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Account;
+namespace App\Http\Resources;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Account\CreateAccountRequest;
@@ -8,7 +8,6 @@ use App\Http\Requests\Account\UpdateAccountRequest;
 use App\Http\Resources\User\UserResource;
 use App\Http\Responses\JsonApiResponse;
 use App\Http\Responses\JsonErrorResponse;
-use App\Services\User\Dto\UpdateUserDto;
 use App\Services\User\Dto\UserDto;
 use App\Services\User\UserService;
 use Illuminate\Http\Request;

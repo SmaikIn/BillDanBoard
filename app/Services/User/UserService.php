@@ -21,4 +21,8 @@ interface UserService
 
     public function update(UpdateUserDto $updateUserDto);
 
+    public function getCompanyIds(UuidInterface $userId);
+
+    public function firstUserInCompany(UuidInterface $companyId);
+
 }

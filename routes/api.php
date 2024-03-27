@@ -1,10 +1,7 @@
 <?php
 
-use App\Http\Controllers\Account\AccountController;
 use App\Http\Controllers\Auth\AuthController;
-use App\Models\Company;
-use App\Models\User;
-use Illuminate\Http\Request;
+use App\Http\Resources\AccountController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -28,4 +25,7 @@ Route::group(['prefix' => 'auth', 'middleware' => 'auth'], function () {
     Route::post('refresh', [AuthController::class, 'refresh'])->withoutMiddleware(['auth']);
     Route::get('me', [AuthController::class, 'me']);
 });
-
+Route::apiResource('account/company', \App\Http\Controllers\Account\AccountCompanyController::class);
+Route::get('test', function () {
+    return view('emails.create-company');
+});
