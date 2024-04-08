@@ -4,7 +4,7 @@ services:
 
   #Nginx webserver
   webserver:
-    container_name: diplom_webserver
+    container_name: webserver
     tty: true
     restart: unless-stopped
     build:
@@ -12,37 +12,50 @@ services:
       dockerfile: .docker/nginx/Dockerfile
     ports:
       - "80:80"
+      - "81:81"
     volumes:
-      - .:/var/www
-      - .docker/nginx/conf.d/:/etc/nginx/conf.d/
+      - ./:/var/www/html
     networks:
       - app-network
 
-  # PHP service
-  app:
-    container_name: diplom_app
+  # Frontend
+  frontend:
+    container_name: frontend
     tty: true
     restart: unless-stopped
     build:
       context: ./
-      dockerfile: .docker/php/Dockerfile
-    working_dir: /var/www
+      dockerfile: .docker/frontend/Dockerfile
+    networks:
+      - app-network
+
+  # Backend
+  laravel:
+    container_name: laravel
+    tty: true
+    restart: unless-stopped
+    build:
+      context: ./
+      dockerfile: .docker/laravel/Dockerfile
     extra_hosts:
       - 'host.docker.internal:host-gateway'
     volumes:
-      - .:/var/www
-      - .docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini
+      - ./:/var/www/html
     environment:
       XDEBUG_SESSION: 1
       XDEBUG_MODE: '${SAIL_XDEBUG_MODE:-off}'
       XDEBUG_CONFIG: '${SAIL_XDEBUG_CONFIG:-client_host=host.docker.internal}'
       PHP_IDE_CONFIG: 'serverName=laravel'
+    depends_on:
+      - db
+      - redis
+      - clickhouse
     networks:
       - app-network
 
   # DB service (MySQL)
   db:
-    container_name: diplom_db
+    container_name: db
     #platform: linux/x86_64 uncomment for MacBook M1
     build:
       context: ./
@@ -59,11 +72,6 @@ services:
       SERVICE_NAME: mysql
       MYSQL_TCP_PORT: '${DB_PORT}'
       MYSQL_ALLOW_EMPTY_PASSWORD: 1
-    volumes:
-      - .docker/mysql/my.cnf:/etc/mysql/my.cnf
-      - .docker/data/mysql/mysql-data:/var/lib/mysql/
-      - .docker/data/mysql/mysql-files:/var/lib/mysql-files
-      #- ./dump.sql:/dump.sql
     networks:
       - app-network
 
@@ -72,7 +80,7 @@ services:
     build:
       context: ./
       dockerfile: .docker/clickhouse/Dockerfile
-    container_name: diplom_clickhouse
+    container_name: clickhouse
     ports:
       - "8123:8123" # Порт для HTTP-интерфейса ClickHouse
       - "9000:9000" # Порт для TCP-интерфейса ClickHouse
@@ -84,7 +92,7 @@ services:
 
   # Mailhog service for work with smtp on localhost
   mailhog:
-    container_name: diplom_mailhog
+    container_name: mailhog
     build:
       context: ./
       dockerfile: .docker/mailhog/Dockerfile
@@ -97,7 +105,7 @@ services:
       - app-network
 
   redis:
-    container_name: diplom_redis
+    container_name: redis
     image: 'redis:alpine'
     ports:
       - '6379:6379'
