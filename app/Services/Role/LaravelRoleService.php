@@ -2,9 +2,9 @@
 
 namespace App\Services\Role;
 
+use App\Services\Role\Dto\RoleDto;
 use App\Services\Role\Repositories\RoleRepository;
-use App\Services\Role\Dto\CreateRoleDto;
-use App\Services\Role\Dto\UpdateRoleDto;
+use Ramsey\Uuid\UuidInterface;
 
 final readonly class LaravelRoleService implements RoleService
 {
@@ -13,28 +13,13 @@ final readonly class LaravelRoleService implements RoleService
     ) {
     }
 
-    public function find(int $id)
+    public function getRolesByCompanyId(UuidInterface $companyId): array
     {
-        return $this->repository->find($id);
+        return $this->repository->getRolesByCompanyId($companyId);
     }
 
-    public function findMany(array $arrayIds)
+    public function getRoleByCompanyId(UuidInterface $companyId, UuidInterface $roleId): RoleDto
     {
-        return $this->repository->findMany($arrayIds);
-    }
-
-    public function delete(int $id)
-    {
-        return $this->repository->delete($id);
-    }
-
-    public function create(CreateRoleDto $dto)
-    {
-        return $this->repository->create($dto);
-    }
-
-    public function update(UpdateRoleDto $dto)
-    {
-        return $this->repository->update($dto);
+        return $this->repository->getRoleByCompanyId($companyId, $roleId);
     }
 }

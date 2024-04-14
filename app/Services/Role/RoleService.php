@@ -2,18 +2,14 @@
 
 namespace App\Services\Role;
 
-use App\Services\Role\Dto\CreateRoleDto;
-use App\Services\Role\Dto\UpdateRoleDto;
+use App\Services\Role\Dto\RoleDto;
+use Ramsey\Uuid\UuidInterface;
 
 interface RoleService
 {
-    public function find(int $id);
+    public function getRolesByCompanyId(UuidInterface $companyId): array;
 
-    public function findMany(array $arrayIds);
+    public function getRoleByCompanyId(UuidInterface $companyId, UuidInterface $roleId): RoleDto;
 
-    public function delete(int $id);
-
-    public function create(CreateRoleDto $dto);
-
-    public function update(UpdateRoleDto $dto);
+    public function deleteRoleByCompanyId(UuidInterface $companyId, UuidInterface $roleId): UuidInterface;
 }

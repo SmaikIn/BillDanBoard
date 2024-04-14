@@ -2,42 +2,61 @@
 
 namespace App\Services\Role\Repositories;
 
-use App\Services\Role\Dto\CreateRoleDto;
-use App\Services\Role\Dto\UpdateRoleDto;
+use App\Services\Role\Dto\RoleDto;
+use Carbon\Carbon;
+use Carbon\CarbonInterface;
+use Illuminate\Cache\Repository;
+use Ramsey\Uuid\UuidInterface;
 
 final readonly class CacheRoleRepository implements RoleRepository
 {
-    public function __construct()
-    {
+
+    const CACHE_TTL_DAYS = CarbonInterface::DAYS_PER_WEEK;
+
+    public function __construct(
+        private DatabaseRoleRepository $databaseRoleRepository,
+        private Repository $cache,
+        private \Illuminate\Config\Repository $config,
+    ) {
     }
 
-    public function find(int $id)
+    public function getRolesByCompanyId(UuidInterface $companyId): array
     {
-        //TODO logic
+        $key = $this->getKeyForCache($companyId->toString());
+
+        return $this->cache->remember(
+            $key,
+            Carbon::parse(self::CACHE_TTL_DAYS.' days'),
+            function ($companyId) {
+                return $this->databaseRoleRepository->getRolesByCompanyId($companyId);
+            },
+        );
     }
 
-    public function findMany(array $arrayIds)
+    public function getRoleByCompanyId(UuidInterface $companyId, UuidInterface $roleId): ?RoleDto
     {
-        //TODO logic
+        $key = $this->getKeyForCache($companyId->toString());
+
+        $roles = $this->cache->remember(
+            $key,
+            Carbon::parse(self::CACHE_TTL_DAYS.' days'),
+            function ($companyId) {
+                return $this->databaseRoleRepository->getRolesByCompanyId($companyId);
+            },
+        );
+
+        /** @var RoleDto[] $roles */
+        foreach ($roles as $role) {
+            if ($role->getId()->toString() === $roleId->toString()) {
+                return $role;
+            }
+        }
+
+        return null;
     }
 
-    public function delete(int $id)
+    private function getKeyForCache(string $companyId): string
     {
-        //TODO logic
-    }
-
-    public function create(CreateRoleDto $dto)
-    {
-        //TODO logic
-    }
-
-    public function update(UpdateRoleDto $dto)
-    {
-        //TODO logic
-    }
-
-    private function formatToDto(Model Role)
-    {
-        //TODO logic
+        return $this->config->get('cache.keys.role.company').'-'.$companyId;
     }
 }

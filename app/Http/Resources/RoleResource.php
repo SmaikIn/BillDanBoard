@@ -2,18 +2,24 @@
 
 namespace App\Http\Resources;
 
+use App\Services\Role\Dto\RoleDto;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-/** @mixin \App\Models\Role */
 class RoleResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
+        /**
+         * @var RoleDto $this
+         */
+        $role = $this;
+
         return [
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
-            'id' => $this->id,
+            'id' => $role->getId(),
+            'name' => $role->getName(),
+            'companyId' => $role->getCompanyId(),
+            'createdAt' => $role->getCreatedAt(),
         ];
     }
 }
