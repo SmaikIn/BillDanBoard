@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Account;
 
+use App\Dto\UserDto as UserFrontend;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Account\CreateAccountRequest;
 use App\Http\Requests\Account\UpdateAccountRequest;
@@ -71,7 +72,20 @@ class AccountController extends Controller
 
     private function returnUserResource(UserDto $userDto, $request)
     {
-        $userResource = new UserResource($userDto);
+        $userResource = new UserResource(
+            new UserFrontend(
+                id: $userDto->getId(),
+                firstName: $userDto->getFirstName(),
+                lastName: $userDto->getLastName(),
+                secondName: $userDto->getSecondName(),
+                phone: $userDto->getPhone(),
+                photo: $userDto->getPhoto(),
+                email: $userDto->getEmail(),
+                yandexId: $userDto->getYandexId(),
+                birthday: $userDto->getBirthday(),
+                createdAt: $userDto->getCreatedAt(),
+            )
+        );
 
         return new JsonApiResponse($userResource->toArray($request));
     }

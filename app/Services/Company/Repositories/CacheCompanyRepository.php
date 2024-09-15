@@ -32,7 +32,7 @@ final readonly class CacheCompanyRepository implements CompanyRepository
         return $this->cache->remember(
             $key,
             Carbon::parse(self::CACHE_TTL_DAYS.' days'),
-            function ($companyId) {
+            function () use ($companyId) {
                 return $this->databaseCompanyRepository->find($companyId);
             },
         );

@@ -110,13 +110,16 @@ return [
 
     'keys' => [
         'company' => [
-            'company' => 'company',
+            'company' => 'companies',
         ],
         'role' => [
-            'company' => 'company',
+            'company' => 'companyRoles',
         ],
         'department' => [
-            'company' => 'company',
+            'company' => 'companyDepartments',
+        ],
+        'profile' => [
+            'company' => 'companyProfiles',
         ]
     ]
 ];
