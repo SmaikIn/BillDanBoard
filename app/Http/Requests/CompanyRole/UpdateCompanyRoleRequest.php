@@ -22,7 +22,7 @@ class UpdateCompanyRoleRequest extends FormRequest
 
     protected function prepareForValidation(): void
     {
-        $this->merge(['companyId' => $this->route('uuid')]);
-        $this->merge(['roleId' => $this->route('uuid')]);
+        $this->merge(['companyId' => $this->route('companyId')]);
+        $this->merge(['roleId' => $this->route('role')]);
     }
 }

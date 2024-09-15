@@ -29,7 +29,7 @@ final readonly class CacheRoleRepository implements RoleRepository
         return $this->cache->remember(
             $key,
             Carbon::parse(self::CACHE_TTL_DAYS.' days'),
-            function ($companyId) {
+            function () use ($companyId) {
                 return $this->databaseRoleRepository->getRolesByCompanyId($companyId);
             },
         );
@@ -42,7 +42,7 @@ final readonly class CacheRoleRepository implements RoleRepository
         $roles = $this->cache->remember(
             $key,
             Carbon::parse(self::CACHE_TTL_DAYS.' days'),
-            function ($companyId) {
+            function () use ($companyId) {
                 return $this->databaseRoleRepository->getRolesByCompanyId($companyId);
             },
         );

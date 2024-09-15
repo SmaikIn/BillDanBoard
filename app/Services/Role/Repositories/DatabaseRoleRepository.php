@@ -22,7 +22,7 @@ final readonly class DatabaseRoleRepository implements RoleRepository
      */
     public function getRolesByCompanyId(UuidInterface $companyId): array
     {
-        $dbRoles = Role::where('company_id', $companyId->toString())->orderBy('name')->get();
+        $dbRoles = Role::where('company_uuid', $companyId->toString())->orderBy('name')->get();
 
         $roles = [];
         foreach ($dbRoles as $role) {
@@ -34,7 +34,7 @@ final readonly class DatabaseRoleRepository implements RoleRepository
 
     public function getRoleByCompanyId(UuidInterface $companyId, UuidInterface $roleId): RoleDto
     {
-        $role = Role::where('company_id', $companyId->toString())->where('uuid', $roleId->toString())->firstOrFail();
+        $role = Role::where('company_uuid', $companyId->toString())->where('uuid', $roleId->toString())->firstOrFail();
 
         return $this->formatToDto($role);
     }
@@ -55,8 +55,8 @@ final readonly class DatabaseRoleRepository implements RoleRepository
 
     public function updateRoleByCompanyId(UpdateRoleDto $roleDto): RoleDto
     {
-        $role = Role::where('company_id', $roleDto->getCompanyUuid()->toString())->where('uuid',
-            $roleDto->getUuid()->toString())->firstOrFail();
+        $role = Role::where('company_uuid', $roleDto->getCompanyUuid()->toString())
+            ->where('uuid', $roleDto->getUuid()->toString())->firstOrFail();
 
         $role->name = $roleDto->getName();
         $role->save();
@@ -66,7 +66,7 @@ final readonly class DatabaseRoleRepository implements RoleRepository
 
     public function deleteRoleByCompanyId(UuidInterface $companyId, UuidInterface $roleId): bool
     {
-        $role = Role::where('company_id', $companyId->toString())->where('uuid', $roleId->toString())->firstOrFail();
+        $role = Role::where('company_uuid', $companyId->toString())->where('uuid', $roleId->toString())->firstOrFail();
 
         return $role->delete();
     }
