@@ -114,6 +114,9 @@ return [
         ],
         'role' => [
             'company' => 'company',
+        ],
+        'department' => [
+            'company' => 'company',
         ]
     ]
 ];

@@ -17,7 +17,7 @@ class CompaniesTableSeeder extends Seeder
                 'uuid' => $faker->unique()->uuid,
                 'name' => $faker->company,
                 'inn' => $faker->numerify('##########'), // Генерация случайного ИНН
-                'kpp' => $faker->optional()->numerify('##########'), // Генерация случайного КПП или null
+                'kpp' => $faker->optional()->numerify('#########'), // Генерация случайного КПП или null
                 'email' => $faker->unique()->safeEmail,
                 'phone' => $faker->e164PhoneNumber,
                 'website' => $faker->optional()->domainName,
