@@ -13,7 +13,7 @@ final class Kpp
     {
         if (!filter_var($value, FILTER_VALIDATE_REGEXP, [
             'options' => [
-                'regexp' => '/^\d{10}$/',
+                'regexp' => '/^\d{9}$/',
             ],
         ])) {
             throw new InvalidArgumentException('Invalid KPP');

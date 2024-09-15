@@ -28,6 +28,8 @@ Route::group(['prefix' => 'auth', 'middleware' => 'auth'], function () {
 Route::apiResource('account/companies', \App\Http\Controllers\Account\AccountCompanyController::class);
 Route::apiResource('account/company/{companyId}/roles',
     \App\Http\Controllers\Account\AccountCompanyRoleController::class);
+Route::apiResource('account/company/{companyId}/departments',
+    \App\Http\Controllers\Account\AccountCompanyDepartmentController::class);
 Route::get('test', function () {
     return view('emails.create-company');
 });

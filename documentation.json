@@ -465,6 +465,259 @@
         }
       }
     },
+    "/account/company/{companyId}/departments": {
+      "get": {
+        "tags": [
+          "Департаменты"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "companyId",
+            "required": true,
+            "description": "uuid компании",
+            "schema": {
+              "type": "uuid"
+            }
+          }
+        ],
+        "summary": "Получение ролей компании относительно пользователя",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Успешно получена Департамент",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DepartmentResource"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "company not exists"
+          },
+          "404": {
+            "description": "Департамент не найден"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Департаменты"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "companyId",
+            "required": true,
+            "description": "uuid компании",
+            "schema": {
+              "type": "uuid"
+            }
+          }
+        ],
+        "summary": "Создание Департаменты компании относительно пользователя",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateDepartmentRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Успешно получена Департамент",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DepartmentResource"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "company not exists"
+          },
+          "404": {
+            "description": "Департамент не найден"
+          }
+        }
+      }
+    },
+    "/account/company/{companyId}/departments/{departmentId}": {
+      "get": {
+        "tags": [
+          "Департаменты"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "companyId",
+            "required": true,
+            "description": "uuid компании",
+            "schema": {
+              "type": "uuid"
+            }
+          },
+          {
+            "in": "path",
+            "name": "departmentId",
+            "required": true,
+            "description": "uuid Департаменты",
+            "schema": {
+              "type": "uuid"
+            }
+          }
+        ],
+        "summary": "Получение Департаменты компании относительно пользователя",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Успешно получена Департамент",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DepartmentResource"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "company not exists"
+          },
+          "404": {
+            "description": "Департамент не найден"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Департаменты"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "companyId",
+            "required": true,
+            "description": "uuid компании",
+            "schema": {
+              "type": "uuid"
+            }
+          },
+          {
+            "in": "path",
+            "name": "departmentId",
+            "required": true,
+            "description": "uuid Департаменты",
+            "schema": {
+              "type": "uuid"
+            }
+          },
+          {
+            "in": "query",
+            "name": "departmentName",
+            "required": true,
+            "description": "Название Департаменты",
+            "schema": {
+              "type": "uuid"
+            }
+          }
+        ],
+        "summary": "Обновление Департаменты компании относительно пользователя",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Успешно получена Департамент",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DepartmentResource"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "company not exists"
+          },
+          "404": {
+            "description": "Департамент не найден"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Департаменты"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "companyId",
+            "required": true,
+            "description": "uuid компании",
+            "schema": {
+              "type": "uuid"
+            }
+          },
+          {
+            "in": "path",
+            "name": "departmentId",
+            "required": true,
+            "description": "uuid Департаменты",
+            "schema": {
+              "type": "uuid"
+            }
+          }
+        ],
+        "summary": "Удаление Департаменты компании относительно пользователя",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Успешно получена Департамент",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DepartmentResource"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "company not exists"
+          },
+          "404": {
+            "description": "Департамент не найден"
+          }
+        }
+      }
+    },
     "auth/updateAccount/{uuid}": {
       "patch": {
         "summary": "Update an account by UUID",
@@ -818,6 +1071,43 @@
             "type": "string",
             "format": "date-time",
             "description": "Дата и время создания роли"
+          }
+        }
+      },
+      "CreateDepartmentRequest": {
+        "type": "object",
+        "properties": {
+          "companyId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Уникальный идентификатор компании (UUID)"
+          },
+          "departmentName": {
+            "type": "string",
+            "required": true,
+            "description": "Название департамента"
+          }
+        }
+      },
+      "DepartmentResource": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Уникальный идентификатор департамента"
+          },
+          "name": {
+            "type": "string",
+            "description": "Название департамента"
+          },
+          "companyId": {
+            "type": "string",
+            "description": "Идентификатор компании, к которой относится роль"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Дата и время создания департамента"
           }
         }
       }

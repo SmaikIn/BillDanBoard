@@ -2,18 +2,24 @@
 
 namespace App\Http\Resources;
 
+use App\Services\Department\Dto\DepartmentDto;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-/** @mixin \App\Models\Department */
 class DepartmentResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
+        /**
+         * @var DepartmentDto $this
+         */
+        $department = $this;
+
         return [
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
-            'id' => $this->id,
+            'id' => $department->getId(),
+            'name' => $department->getName(),
+            'companyId' => $department->getCompanyId(),
+            'createdAt' => $department->getCreatedAt(),
         ];
     }
 }
