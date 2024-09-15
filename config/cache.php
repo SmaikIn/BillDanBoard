@@ -110,7 +110,10 @@ return [
 
     'keys' => [
         'company' => [
-            'company' => 'company'
+            'company' => 'company',
+        ],
+        'role' => [
+            'company' => 'company',
         ]
     ]
 ];

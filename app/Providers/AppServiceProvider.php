@@ -10,6 +10,10 @@ use App\Services\Company\Repositories\CacheCompanyRepository;
 use App\Services\Company\Repositories\CompanyRepository;
 use App\Services\Mail\LaravelMailService;
 use App\Services\Mail\MailService;
+use App\Services\Role\LaravelRoleService;
+use App\Services\Role\Repositories\CacheRoleRepository;
+use App\Services\Role\Repositories\RoleRepository;
+use App\Services\Role\RoleService;
 use App\Services\User\LaravelUserService;
 use App\Services\User\UserService;
 use Illuminate\Support\ServiceProvider;
@@ -42,5 +46,8 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->singleton(UserService::class, LaravelUserService::class);
         $this->app->singleton(MailService::class, LaravelMailService::class);
+
+        $this->app->singleton(RoleService::class, LaravelRoleService::class);
+        $this->app->singleton(RoleRepository::class, CacheRoleRepository::class);
     }
 }

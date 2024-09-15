@@ -25,7 +25,9 @@ Route::group(['prefix' => 'auth', 'middleware' => 'auth'], function () {
     Route::post('refresh', [AuthController::class, 'refresh'])->withoutMiddleware(['auth']);
     Route::get('me', [AuthController::class, 'me']);
 });
-Route::apiResource('account/company', \App\Http\Controllers\Account\AccountCompanyController::class);
+Route::apiResource('account/companies', \App\Http\Controllers\Account\AccountCompanyController::class);
+Route::apiResource('account/company/{companyId}/roles',
+    \App\Http\Controllers\Account\AccountCompanyRoleController::class);
 Route::get('test', function () {
     return view('emails.create-company');
 });
