@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Controllers\Account;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Account\CreateAccountRequest;
@@ -11,8 +11,8 @@ use App\Http\Responses\JsonErrorResponse;
 use App\Services\User\Dto\UserDto;
 use App\Services\User\UserService;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Ramsey\Uuid\Uuid;
+use Symfony\Component\HttpFoundation\Response;
 
 class AccountController extends Controller
 {
