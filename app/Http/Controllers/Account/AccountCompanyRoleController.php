@@ -3,14 +3,16 @@
 namespace App\Http\Controllers\Account;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\CompanyRole\CreateCompanyRoleRequest;
 use App\Http\Requests\CompanyRole\DeleteCompanyRoleRequest;
 use App\Http\Requests\CompanyRole\IndexCompanyRoleRequest;
 use App\Http\Requests\CompanyRole\ShowCompanyRoleRequest;
-use App\Http\Requests\RoleRequest;
+use App\Http\Requests\CompanyRole\UpdateCompanyRoleRequest;
 use App\Http\Resources\RoleResource;
 use App\Http\Responses\JsonApiResponse;
 use App\Http\Responses\JsonErrorResponse;
-use App\Models\Role;
+use App\Services\Role\Dto\CreateRoleDto;
+use App\Services\Role\Dto\UpdateRoleDto;
 use App\Services\Role\RoleService;
 use App\Services\User\UserService;
 use Illuminate\Support\Facades\Auth;
@@ -29,7 +31,6 @@ class AccountCompanyRoleController extends Controller
     public function index(IndexCompanyRoleRequest $request)
     {
         $companyId = $this->checkUserCompany($request->company_id);
-
         if (is_null($companyId)) {
             return new JsonErrorResponse(__('errors.company.not exists'), status: Response::HTTP_FORBIDDEN);
         }
@@ -39,41 +40,62 @@ class AccountCompanyRoleController extends Controller
         return new JsonApiResponse(RoleResource::collection($roles)->toArray($request), status: Response::HTTP_OK);
     }
 
-    public function store(RoleRequest $request)
+    public function store(CreateCompanyRoleRequest $request)
     {
-        return new RoleResource(Role::create($request->validated()));
+        $companyId = $this->checkUserCompany($request->company_id);
+        if (is_null($companyId)) {
+            return new JsonErrorResponse(__('errors.company.not exists'), status: Response::HTTP_FORBIDDEN);
+        }
+
+        $dto = new CreateRoleDto(
+            $companyId,
+            $request->get('roleName')
+        );
+
+        $role = $this->roleService->createRoleByCompanyId($dto);
+
+        return new JsonApiResponse(RoleResource::make($role)->toArray($request), status: Response::HTTP_CREATED);
     }
 
     public function show(ShowCompanyRoleRequest $request)
     {
         $companyId = $this->checkUserCompany($request->company_id);
-        $roleId = Uuid::fromString($request->role_id);
-
         if (is_null($companyId)) {
             return new JsonErrorResponse(__('errors.company.not exists'), status: Response::HTTP_FORBIDDEN);
         }
 
+        $roleId = Uuid::fromString($request->role_id);
         $role = $this->roleService->getRoleByCompanyId($companyId, $roleId);
 
         return new JsonApiResponse(RoleResource::make($role)->toArray($request), status: Response::HTTP_OK);
     }
 
-    public function update(RoleRequest $request, Role $role)
+    public function update(UpdateCompanyRoleRequest $request)
     {
-        $role->update($request->validated());
+        $companyId = $this->checkUserCompany($request->company_id);
+        if (is_null($companyId)) {
+            return new JsonErrorResponse(__('errors.company.not exists'), status: Response::HTTP_FORBIDDEN);
+        }
 
-        return new RoleResource($role);
+        $dto = new UpdateRoleDto(
+            Uuid::fromString($request->get('companyId')),
+            Uuid::fromString($request->get('roleId')),
+            $request->get('roleName'),
+        );
+
+        $role = $this->roleService->updateRoleByCompanyId($dto);
+
+        return new JsonApiResponse(RoleResource::make($role)->toArray($request), status: Response::HTTP_OK);
     }
 
     public function destroy(DeleteCompanyRoleRequest $request)
     {
         $companyId = $this->checkUserCompany($request->company_id);
-        $roleId = Uuid::fromString($request->role_id);
-
         if (is_null($companyId)) {
             return new JsonErrorResponse(__('errors.company.not exists'), status: Response::HTTP_FORBIDDEN);
         }
 
+        $roleId = Uuid::fromString($request->role_id);
         $this->roleService->deleteRoleByCompanyId($companyId, $roleId);
 
         return new JsonApiResponse([], status: Response::HTTP_OK);

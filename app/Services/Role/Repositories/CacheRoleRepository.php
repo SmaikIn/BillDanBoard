@@ -2,7 +2,9 @@
 
 namespace App\Services\Role\Repositories;
 
+use App\Services\Role\Dto\CreateRoleDto;
 use App\Services\Role\Dto\RoleDto;
+use App\Services\Role\Dto\UpdateRoleDto;
 use Carbon\Carbon;
 use Carbon\CarbonInterface;
 use Illuminate\Cache\Repository;
@@ -55,8 +57,42 @@ final readonly class CacheRoleRepository implements RoleRepository
         return null;
     }
 
+
+    public function createRoleByCompanyId(CreateRoleDto $roleDto): RoleDto
+    {
+        $dbRoleDto = $this->databaseRoleRepository->createRoleByCompanyId($roleDto);
+
+        $this->forgetCache($dbRoleDto->getCompanyId());
+
+        return $dbRoleDto;
+    }
+
+    public function updateRoleByCompanyId(UpdateRoleDto $roleDto): RoleDto
+    {
+        $dbRoleDto = $this->databaseRoleRepository->updateRoleByCompanyId($roleDto);
+
+        $this->forgetCache($dbRoleDto->getCompanyId());
+
+        return $dbRoleDto;
+    }
+
+    public function deleteRoleByCompanyId(UuidInterface $companyId, UuidInterface $roleId): bool
+    {
+        $bool = $this->databaseRoleRepository->deleteRoleByCompanyId($companyId, $roleId);
+
+        $this->forgetCache($companyId);
+
+        return $bool;
+    }
+
+    private function forgetCache(UuidInterface $companyId): void
+    {
+        $this->cache->forget($this->getKeyForCache($companyId->toString()));
+    }
+
     private function getKeyForCache(string $companyId): string
     {
         return $this->config->get('cache.keys.role.company').'-'.$companyId;
     }
+
 }

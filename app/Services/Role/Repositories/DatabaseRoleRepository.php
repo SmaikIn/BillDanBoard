@@ -16,31 +16,6 @@ final readonly class DatabaseRoleRepository implements RoleRepository
     {
     }
 
-    public function find(int $id)
-    {
-        //TODO logic
-    }
-
-    public function findMany(array $arrayIds)
-    {
-        //TODO logic
-    }
-
-    public function delete(int $id)
-    {
-        //TODO logic
-    }
-
-    public function create(CreateRoleDto $dto)
-    {
-        //TODO logic
-    }
-
-    public function update(UpdateRoleDto $dto)
-    {
-        //TODO logic
-    }
-
     /**
      * @param  UuidInterface  $companyId
      * @return RoleDto[]
@@ -55,6 +30,45 @@ final readonly class DatabaseRoleRepository implements RoleRepository
         }
 
         return $roles;
+    }
+
+    public function getRoleByCompanyId(UuidInterface $companyId, UuidInterface $roleId): RoleDto
+    {
+        $role = Role::where('company_id', $companyId->toString())->where('uuid', $roleId->toString())->firstOrFail();
+
+        return $this->formatToDto($role);
+    }
+
+
+    public function createRoleByCompanyId(CreateRoleDto $roleDto): RoleDto
+    {
+        $role = new Role();
+        $role->uuid = Uuid::uuid4()->toString();
+        $role->company_uuid = $roleDto->getCompanyUuid()->toString();
+        $role->name = $roleDto->getName();
+        $role->created_at = Carbon::now();
+
+        $role->save();
+
+        return $this->formatToDto($role);
+    }
+
+    public function updateRoleByCompanyId(UpdateRoleDto $roleDto): RoleDto
+    {
+        $role = Role::where('company_id', $roleDto->getCompanyUuid()->toString())->where('uuid',
+            $roleDto->getUuid()->toString())->firstOrFail();
+
+        $role->name = $roleDto->getName();
+        $role->save();
+
+        return $this->formatToDto($role);
+    }
+
+    public function deleteRoleByCompanyId(UuidInterface $companyId, UuidInterface $roleId): bool
+    {
+        $role = Role::where('company_id', $companyId->toString())->where('uuid', $roleId->toString())->firstOrFail();
+
+        return $role->delete();
     }
 
     public function formatToDto(Role $role): RoleDto

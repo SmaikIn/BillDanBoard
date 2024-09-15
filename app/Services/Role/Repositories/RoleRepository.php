@@ -12,4 +12,11 @@ interface RoleRepository
     public function getRolesByCompanyId(UuidInterface $companyId): array;
 
     public function getRoleByCompanyId(UuidInterface $companyId, UuidInterface $roleId): ?RoleDto;
+
+    public function createRoleByCompanyId(CreateRoleDto $roleDto): RoleDto;
+
+    public function updateRoleByCompanyId(UpdateRoleDto $roleDto): RoleDto;
+
+    public function deleteRoleByCompanyId(UuidInterface $companyId, UuidInterface $roleId): bool;
+
 }
