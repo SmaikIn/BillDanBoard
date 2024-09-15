@@ -1,7 +1,7 @@
 <?php
 
+use App\Http\Controllers\Account\AccountController;
 use App\Http\Controllers\Auth\AuthController;
-use App\Http\Resources\AccountController;
 use Illuminate\Support\Facades\Route;
 
 /*
