@@ -33,11 +33,13 @@ Route::group(['prefix' => 'account', 'middleware' => 'auth'], function () {
     Route::group(['prefix' => 'company'], function () {
         Route::apiResource('{companyId}/roles', AccountCompanyRoleController::class);
         Route::apiResource('{companyId}/departments', AccountCompanyDepartmentController::class);
-        Route::apiResource('{companyId}/profiles', AccountCompanyProfileController::class)->except(['create']);
-        Route::post('{companyId}/profiles/invite/{profile}', [AccountCompanyProfileController::class, 'inviteUserToCompany']);
-        Route::post('{companyId}/profiles/ban', [AccountCompanyProfileController::class, 'banUser']);
+        Route::post('{companyId}/profiles/accept/{code}', [AccountCompanyProfileController::class, 'acceptUserToCompany'])->withoutMiddleware('auth');
+        Route::post('{companyId}/profiles/invite', [AccountCompanyProfileController::class, 'inviteUserToCompany']);
+        Route::post('{companyId}/profiles/ban', [AccountCompanyProfileController::class, 'banProfile']);
+        Route::apiResource('{companyId}/profiles', AccountCompanyProfileController::class)->except(['store']);
     });
 });
+
 
 Route::get('test', function () {
     return view('emails.create-company');

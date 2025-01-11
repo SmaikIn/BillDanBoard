@@ -110,16 +110,17 @@ return [
 
     'keys' => [
         'company' => [
-            'company' => 'companies',
+            'company' => 'company_%s',
+            'invite_code' => 'invite_code_%s'
         ],
         'role' => [
-            'company' => 'companyRoles',
+            'company' => 'company_roles_%s',
         ],
         'department' => [
-            'company' => 'companyDepartments',
+            'company' => 'company_departments_%s',
         ],
         'profile' => [
-            'company' => 'companyProfiles',
+            'company' => 'company_profiles_%s',
         ]
     ]
 ];

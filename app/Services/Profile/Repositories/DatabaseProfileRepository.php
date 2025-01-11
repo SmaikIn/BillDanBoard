@@ -10,6 +10,7 @@ use App\Services\Profile\Dto\CreateProfileDto;
 use App\Services\Profile\Dto\ProfileDto;
 use App\Services\Profile\Dto\UpdateProfileDto;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 
@@ -62,8 +63,19 @@ final readonly class DatabaseProfileRepository implements ProfileRepository
         return $profile->delete();
     }
 
-    public function banUser(){
+    public function banProfile(UuidInterface $companyId, UuidInterface $profileId): bool
+    {
+        try {
+            $profile = Profile::where('company_uuid', $companyId->toString())
+                ->where('uuid', $profileId->toString())->firstOrFail();
+        } catch (ModelNotFoundException $exception) {
+            return false;
+        }
 
+        $profile->is_active = 0;
+        $profile->save();
+
+        return true;
     }
 
     public function formatToDto(Profile $profile): ProfileDto

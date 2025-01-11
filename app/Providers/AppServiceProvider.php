@@ -63,5 +63,6 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->singleton(ProfileService::class, LaravelProfileService::class);
         $this->app->singleton(ProfileRepository::class, CacheProfileRepository::class);
+
     }
 }

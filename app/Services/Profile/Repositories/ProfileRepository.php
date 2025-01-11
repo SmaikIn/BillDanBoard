@@ -19,6 +19,6 @@ interface ProfileRepository
 
     public function deleteProfileByCompanyId(UuidInterface $companyId, UuidInterface $profileId): bool;
 
-    public function banUser();
+    public function banProfile(UuidInterface $companyId, UuidInterface $profileId);
 
 }

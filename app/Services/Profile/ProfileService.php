@@ -22,5 +22,5 @@ interface ProfileService
 
     public function inviteUserToCompany();
 
-    public function banUser();
+    public function banProfile(UuidInterface $companyId, UuidInterface $profileId): bool;
 }

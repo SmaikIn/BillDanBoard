@@ -41,11 +41,8 @@ final readonly class LaravelProfileService implements ProfileService
 
     public function deleteProfileByCompanyId(UuidInterface $companyId, UuidInterface $profileId): bool
     {
-        $bool = $this->repository->deleteProfileByCompanyId($companyId, $profileId);
+        return $this->repository->deleteProfileByCompanyId($companyId, $profileId);
 
-
-
-        return $bool;
     }
 
 
@@ -53,8 +50,9 @@ final readonly class LaravelProfileService implements ProfileService
     {
     }
 
-    public function banUser()
+    public function banProfile(UuidInterface $companyId, UuidInterface $profileId):bool
     {
+        return $this->repository->banProfile($companyId, $profileId);
     }
 
 

@@ -8,8 +8,9 @@ use App\Services\Mail\Dto\CompanyDto;
 use App\Services\Mail\Dto\UserDto;
 use App\Services\Mail\MailService;
 use App\Services\User\UserService;
+use Illuminate\Contracts\Queue\ShouldQueue;
 
-class CreateCompanyListener
+class CreateCompanyListener implements ShouldQueue
 {
     public function __construct(
         private UserService $userService,

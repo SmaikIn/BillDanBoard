@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers\Account;
 
+use App\Domain\ValueObjects\Email;
 use App\Dto\CompanyDto as CompanyFrontend;
 use App\Dto\DepartmentDto as DepartmentFrontend;
 use App\Dto\ProfileDto as ProfileFrontend;
 use App\Dto\RoleDto as RoleFrontend;
 use App\Dto\UserDto as UserFrontend;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\CompanyProfile\AcceptCompanyProfileRequest;
 use App\Http\Requests\CompanyProfile\BanCompanyProfileRequest;
 use App\Http\Requests\CompanyProfile\DeleteCompanyProfileRequest;
 use App\Http\Requests\CompanyProfile\IndexCompanyProfileRequest;
@@ -110,10 +112,46 @@ class AccountCompanyProfileController extends Controller
 
     public function inviteUserToCompany(InviteCompanyProfileRequest $request)
     {
+        $companyId = $this->checkUserCompany($request->input('companyId'));
+        if (is_null($companyId)) {
+            return new JsonErrorResponse(__('errors.company.not exists'), status: Response::HTTP_FORBIDDEN);
+        }
+
+        $userId = Uuid::fromString(Auth::id());;
+        $email = Email::create($request->input('email'));
+
+        $this->companyService->invite($companyId, $userId, $email);
+
+        return new JsonApiResponse([], status: Response::HTTP_ACCEPTED);
     }
 
-    public function banUser(BanCompanyProfileRequest $request)
+    public function acceptUserToCompany(AcceptCompanyProfileRequest $request)
     {
+        $code = $request->input('code');
+        $companyId = $request->input('companyId');
+
+        $flag = $this->companyService->accept($companyId, $code);
+
+        if ($flag) {
+            return new JsonApiResponse([], status: Response::HTTP_ACCEPTED);
+        }
+
+        return new JsonErrorResponse(__('errors.code'), status: Response::HTTP_FORBIDDEN);
+    }
+
+    public function banProfile(BanCompanyProfileRequest $request)
+    {
+        $companyId = $this->checkUserCompany($request->input('companyId'));
+        $profileId = Uuid::fromString($request->input('profileId'));
+
+        //TODO add permission
+        $flag = $this->profileService->banProfile($companyId, $profileId);
+
+        if ($flag) {
+            return new JsonApiResponse([], status: Response::HTTP_ACCEPTED);
+        }
+
+        return new JsonErrorResponse(__('errors.code'), status: Response::HTTP_FORBIDDEN);
     }
 
     private function checkUserCompany(string $companyId): ?UuidInterface

@@ -85,8 +85,13 @@ final readonly class CacheProfileRepository implements ProfileRepository
         return $bool;
     }
 
-    public function banUser()
+    public function banProfile(UuidInterface $companyId, UuidInterface $profileId)
     {
+        $bool = $this->databaseProfileRepository->banProfile($companyId, $profileId);
+
+        $this->forgetCache($companyId);
+
+        return $bool;
     }
 
     private function forgetCache(UuidInterface $companyId): void
@@ -96,7 +101,7 @@ final readonly class CacheProfileRepository implements ProfileRepository
 
     private function getKeyForCache(string $companyId): string
     {
-        return $this->config->get('cache.keys.profile.company').'-'.$companyId;
+        return sprintf($this->config->get('cache.keys.profile.company'), $companyId);
     }
 
 }

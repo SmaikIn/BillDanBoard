@@ -33,4 +33,9 @@ interface CompanyRepository
      */
     public function findMany(array $companyIds): array;
 
+    public function getInviteCode(string $code): ?string;
+
+    public function setInviteCode(string $code): void;
+    public function forgetInviteCode(string $code): void;
+
 }
