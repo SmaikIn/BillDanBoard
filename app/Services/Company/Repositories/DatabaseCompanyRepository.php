@@ -90,6 +90,19 @@ final class DatabaseCompanyRepository implements CompanyRepository
         return $companies;
     }
 
+    public function getInviteCode(string $code): string
+    {
+        return '';
+    }
+
+    public function setInviteCode(string $code): void
+    {
+    }
+
+    public function forgetInviteCode(string $code): void
+    {
+    }
+
     private function formatCompanyDto(Company $company): CompanyDto
     {
         return new CompanyDto(

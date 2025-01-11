@@ -1,16 +1,17 @@
 <?php
 
-namespace App\Http\Requests\CompanyRole;
+namespace App\Http\Requests\CompanyProfile;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class CreateCompanyRoleRequest extends FormRequest
+class UpdateCompanyProfileRequest extends FormRequest
 {
     public function rules(): array
     {
         return [
             'companyId' => 'required|uuid',
-            'roleName' => 'required|string',
+            'profileId' => 'required|uuid',
+            'profileName' => 'required|string',
         ];
     }
 
@@ -22,5 +23,6 @@ class CreateCompanyRoleRequest extends FormRequest
     protected function prepareForValidation(): void
     {
         $this->merge(['companyId' => $this->route('companyId')]);
+        $this->merge(['profileId' => $this->route('profile')]);
     }
 }

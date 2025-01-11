@@ -14,6 +14,10 @@ use App\Services\Department\Repositories\CacheDepartmentRepository;
 use App\Services\Department\Repositories\DepartmentRepository;
 use App\Services\Mail\LaravelMailService;
 use App\Services\Mail\MailService;
+use App\Services\Profile\LaravelProfileService;
+use App\Services\Profile\ProfileService;
+use App\Services\Profile\Repositories\CacheProfileRepository;
+use App\Services\Profile\Repositories\ProfileRepository;
 use App\Services\Role\LaravelRoleService;
 use App\Services\Role\Repositories\CacheRoleRepository;
 use App\Services\Role\Repositories\RoleRepository;
@@ -56,5 +60,9 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->singleton(DepartmentService::class, LaravelDepartmentService::class);
         $this->app->singleton(DepartmentRepository::class, CacheDepartmentRepository::class);
+
+        $this->app->singleton(ProfileService::class, LaravelProfileService::class);
+        $this->app->singleton(ProfileRepository::class, CacheProfileRepository::class);
+
     }
 }

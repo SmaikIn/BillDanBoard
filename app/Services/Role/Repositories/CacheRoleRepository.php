@@ -92,7 +92,7 @@ final readonly class CacheRoleRepository implements RoleRepository
 
     private function getKeyForCache(string $companyId): string
     {
-        return $this->config->get('cache.keys.role.company').'-'.$companyId;
+        return sprintf($this->config->get('cache.keys.role.company'), $companyId);
     }
 
 }

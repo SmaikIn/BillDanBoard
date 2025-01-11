@@ -2,10 +2,12 @@
 
 namespace App\Services\Company;
 
+use App\Domain\ValueObjects\Email;
 use App\Services\Company\Dto\CompanyDto;
 use App\Services\Company\Dto\CreateCompanyDto;
 use App\Services\Company\Dto\UpdateCompanyDto;
 use App\Services\Company\Events\CreateCompanyEvent;
+use App\Services\Company\Events\InviteUserToCompanyEvent;
 use App\Services\Company\Repositories\CompanyRepository;
 use Illuminate\Events\Dispatcher;
 use Ramsey\Uuid\UuidInterface;
@@ -50,5 +52,27 @@ final readonly class LaravelCompanyService implements CompanyService
     public function delete(UuidInterface $companyId): bool
     {
         return $this->companyRepository->delete($companyId);
+    }
+
+    public function invite(UuidInterface $companyId, UuidInterface $userId, Email $email): void
+    {
+        $code = \Str::random(30);
+
+        $this->companyRepository->setInviteCode($code);
+
+        $this->dispatcher->dispatch(new InviteUserToCompanyEvent($companyId, $userId, $email, $code));
+    }
+
+    public function accept(UuidInterface $companyId, string $code): bool
+    {
+        $checkCode = $this->companyRepository->getInviteCode($code);
+
+        if (is_null($checkCode)) {
+            return false;
+        }
+
+        $this->companyRepository->forgetInviteCode($code);
+
+        return true;
     }
 }

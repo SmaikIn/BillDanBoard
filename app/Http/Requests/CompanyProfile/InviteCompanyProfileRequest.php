@@ -1,16 +1,16 @@
 <?php
 
-namespace App\Http\Requests\CompanyRole;
+namespace App\Http\Requests\CompanyProfile;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class CreateCompanyRoleRequest extends FormRequest
+class InviteCompanyProfileRequest extends FormRequest
 {
     public function rules(): array
     {
         return [
             'companyId' => 'required|uuid',
-            'roleName' => 'required|string',
+            'email' => 'required|email',
         ];
     }
 

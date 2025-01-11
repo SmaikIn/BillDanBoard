@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 use App\Listeners\CreateUserListener;
+use App\Listeners\InviteUserToCompanyListener;
+use App\Services\Company\Events\InviteUserToCompanyEvent;
 use App\Services\User\Events\CreateUserEvent;
 use App\Solutions\Yandex\YandexExtendSocialite;
 use Illuminate\Auth\Events\Registered;
@@ -26,6 +28,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         CreateUserEvent::class => [
             CreateUserListener::class,
+        ],
+        InviteUserToCompanyEvent::class => [
+            InviteUserToCompanyListener::class,
         ],
     ];
 

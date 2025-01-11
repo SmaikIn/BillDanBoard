@@ -16,6 +16,7 @@ return [
     'warehouses' => 'check the warehouse data',
     'again' => 'Try again, something went wrong.',
     'catalog' => 'Unknown url',
+    'code' => 'Unknown code',
     'company' =>
         [
             'exists' => "company already exists ",
