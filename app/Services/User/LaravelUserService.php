@@ -59,4 +59,9 @@ final readonly class LaravelUserService implements UserService
     {
         return $this->userRepository->firstUserInCompany($companyId);
     }
+
+    public function appendCompanyToUser(UuidInterface $companyId, UuidInterface $userId): void
+    {
+        $this->userRepository->appendCompanyToUser($companyId, $userId);
+    }
 }

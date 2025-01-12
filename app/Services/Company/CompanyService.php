@@ -20,7 +20,7 @@ interface CompanyService
 
     public function delete(UuidInterface $companyId);
 
-    public function create(CreateCompanyDto $createCompanyDto);
+    public function create(CreateCompanyDto $createCompanyDto): CompanyDto;
 
     public function update(UpdateCompanyDto $updateCompanyDto);
 

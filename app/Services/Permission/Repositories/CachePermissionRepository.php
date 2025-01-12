@@ -2,10 +2,10 @@
 
 namespace App\Services\Permission\Repositories;
 
+use App\Services\Permission\Dto\PermissionDto;
 use Carbon\Carbon;
 use Carbon\CarbonInterface;
 use Illuminate\Cache\Repository;
-use Ramsey\Uuid\UuidInterface;
 
 final readonly class CachePermissionRepository implements PermissionRepository
 {
@@ -46,8 +46,22 @@ final readonly class CachePermissionRepository implements PermissionRepository
         return array_values($dbPermissions);
     }
 
+    /**
+     * @return PermissionDto[]
+     */
+    public function all(): array
+    {
+        $key = $this->config->get('cache.keys.permission.all');
+
+        return $this->cache->rememberForever($key, function () use ($key) {
+            $this->databasePermissionRepository->all();
+        });
+    }
+
+
     private function getKeyForCache(string $permissionId): string
     {
         return sprintf($this->config->get('cache.keys.permission.permission'), $permissionId);
     }
+
 }

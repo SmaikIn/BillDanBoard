@@ -125,6 +125,7 @@ return [
         ],
         'permission' =>[
             'permission' => 'permission_%s',
+            'all' => 'permissions',
         ]
     ]
 ];

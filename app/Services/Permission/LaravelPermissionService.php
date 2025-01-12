@@ -20,4 +20,12 @@ final readonly class LaravelPermissionService implements PermissionService
     {
         return $this->repository->findMany($arrayIds);
     }
+
+    /**
+     * @return PermissionDto[]
+     */
+    public function all(): array
+    {
+        return $this->repository->all();
+    }
 }

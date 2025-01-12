@@ -78,6 +78,28 @@ final readonly class DatabaseProfileRepository implements ProfileRepository
         return true;
     }
 
+    public function createProfileByCompanyId(CreateProfileDto $profileDto): ProfileDto
+    {
+        $profile = new Profile();
+
+        $profile->uuid = Uuid::uuid4()->toString();
+        $profile->company_uuid = $profileDto->getCompanyId()->toString();
+        $profile->department_uuid = $profileDto->getDepartmentId()->toString();
+        $profile->role_uuid = $profileDto->getRoleId()->toString();
+        $profile->user_uuid = $profileDto->getUserId()->toString();
+        $profile->first_name = $profileDto->getFirstName();
+        $profile->second_name = $profileDto->getSecondName();
+        $profile->email = $profileDto->getEmail();
+        $profile->phone = $profileDto->getPhone();
+        $profile->avatar = $profileDto->getPhoto();
+        $profile->birthday = $profileDto->getBirthday();
+        $profile->is_active = 1;
+        $profile->created_at = Carbon::now();
+        $profile->save();
+
+        return $this->formatToDto($profile);
+    }
+
     public function formatToDto(Profile $profile): ProfileDto
     {
         return new ProfileDto(
@@ -100,8 +122,5 @@ final readonly class DatabaseProfileRepository implements ProfileRepository
         );
     }
 
-    public function createProfileByCompanyId(CreateProfileDto $profileDto): ProfileDto
-    {
-        // TODO: Implement createProfileByCompanyId() method.
-    }
+
 }

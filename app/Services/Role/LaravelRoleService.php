@@ -45,5 +45,10 @@ final readonly class LaravelRoleService implements RoleService
         return $this->repository->getRolePermissions($companyId, $roleId);
     }
 
+    public function appendPermissionsToRole(UuidInterface $roleId, array $permissionIds): void
+    {
+        $this->repository->appendPermissionsToRole($roleId, $permissionIds);
+    }
+
 
 }

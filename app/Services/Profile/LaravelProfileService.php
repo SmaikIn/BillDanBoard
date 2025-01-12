@@ -24,14 +24,14 @@ final readonly class LaravelProfileService implements ProfileService
         return $this->repository->getProfilesByCompanyId($companyId);
     }
 
+    public function createProfile(CreateProfileDto $createProfileDto): ProfileDto
+    {
+        return $this->repository->createProfileByCompanyId($createProfileDto);
+    }
+
     public function getProfileByCompanyId(UuidInterface $companyId, UuidInterface $profileId): ProfileDto
     {
         return $this->repository->getProfileByCompanyId($companyId, $profileId);
-    }
-
-    public function createProfileByCompanyId(CreateProfileDto $profileDto): ProfileDto
-    {
-        return $this->repository->createProfileByCompanyId($profileDto);
     }
 
     public function updateProfileByCompanyId(UpdateProfileDto $profileDto): ProfileDto
@@ -45,15 +45,11 @@ final readonly class LaravelProfileService implements ProfileService
 
     }
 
-
-    public function inviteUserToCompany()
-    {
-    }
-
     public function banProfile(UuidInterface $companyId, UuidInterface $profileId):bool
     {
         return $this->repository->banProfile($companyId, $profileId);
     }
+
 
 
 }

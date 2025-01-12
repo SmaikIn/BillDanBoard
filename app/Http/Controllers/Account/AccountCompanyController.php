@@ -13,6 +13,13 @@ use App\Http\Responses\JsonApiResponse;
 use App\Http\Responses\JsonErrorResponse;
 use App\Services\Company\CompanyService;
 use App\Services\Company\Dto\CompanyDto;
+use App\Services\Department\DepartmentService;
+use App\Services\Department\Dto\CreateDepartmentDto;
+use App\Services\Permission\PermissionService;
+use App\Services\Profile\Dto\CreateProfileDto;
+use App\Services\Profile\ProfileService;
+use App\Services\Role\Dto\CreateRoleDto;
+use App\Services\Role\RoleService;
 use App\Services\User\UserService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -24,7 +31,11 @@ class AccountCompanyController extends Controller
 {
     public function __construct(
         private readonly UserService $userService,
-        private readonly CompanyService $companyService
+        private readonly CompanyService $companyService,
+        private readonly RoleService $roleService,
+        private readonly DepartmentService $departmentService,
+        private readonly PermissionService $permissionService,
+        private readonly ProfileService $profileService,
     ) {
     }
 
@@ -49,12 +60,50 @@ class AccountCompanyController extends Controller
     public function store(CreateCompanyRequest $request)
     {
         $userId = Uuid::fromString(Auth::id());
+        $user = $this->userService->find($userId);
 
         $createCompanyDto = $request->getDto();
-
         $company = $this->companyService->create($createCompanyDto);
 
-        //TODO profileService create profile in company
+        $this->userService->appendCompanyToUser($company->getUuid(), $user->getId());
+
+
+        $createDepartmentDto = new CreateDepartmentDto(
+            $company->getUuid(),
+            "Администрация"
+        );
+        $department = $this->departmentService->createDepartmentByCompanyId($createDepartmentDto);
+
+
+        $createRoleDto = new CreateRoleDto(
+            $company->getUuid(),
+            "Генеральный Директор"
+        );
+        $role = $this->roleService->createRoleByCompanyId($createRoleDto);
+
+
+        $dbPermissions = $this->permissionService->all();
+        $permissionsIds = [];
+        foreach ($dbPermissions as $permission) {
+            $permissionsIds[] = $permission->getUuid()->toString();
+        }
+        $this->roleService->appendPermissionsToRole($role->getId(), $permissionsIds);
+
+
+        $createProfileDto = new CreateProfileDto(
+            userId: $user->getId(),
+            companyId: $company->getUuid(),
+            roleId: $role->getId(),
+            departmentId: $department->getId(),
+            firstName: $user->getFirstName(),
+            lastName: $user->getLastName(),
+            secondName: $user->getSecondName(),
+            phone: $user->getPhone(),
+            photo: $user->getPhoto(),
+            email: $user->getEmail(),
+            birthday: $user->getBirthday(),
+        );
+        $profile = $this->profileService->createProfile($createProfileDto);
 
         return new JsonApiResponse((CompanyResource::make($this->formatCompanyDtoToFrontend($company)))->toArray($request));
     }

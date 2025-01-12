@@ -29,6 +29,22 @@ final readonly class DatabasePermissionRepository implements PermissionRepositor
         return $permissions;
     }
 
+
+    /**
+     * @return PermissionDto[]
+     */
+    public function all(): array
+    {
+        $dbPermissions = Permission::all();
+
+        $permissions = [];
+        foreach ($dbPermissions as $dbPermission) {
+            $permissions[] = $this->formatToDto($dbPermission);
+        }
+
+        return $permissions;
+    }
+
     private function formatToDto(Permission $permission): PermissionDto
     {
         return new PermissionDto(
@@ -38,6 +54,7 @@ final readonly class DatabasePermissionRepository implements PermissionRepositor
             description: $permission->description,
         );
     }
+
 
 
 }

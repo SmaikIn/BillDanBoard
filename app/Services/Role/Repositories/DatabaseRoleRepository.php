@@ -84,6 +84,20 @@ final readonly class DatabaseRoleRepository implements RoleRepository
         return $role->permissions()->pluck('uuid')->toArray();
     }
 
+    public function appendPermissionsToRole(UuidInterface $roleId, array $permissionIds): void
+    {
+        $role = Role::findOrFail($roleId);
+
+        $currentPermissions = $role->permissions()->pluck('id')->toArray();
+
+        $newPermissions = array_diff($permissionIds, $currentPermissions);
+
+        if (!empty($newPermissions)) {
+            $role->permissions()->attach($newPermissions);
+        }
+    }
+
+
     public function formatToDto(Role $role): RoleDto
     {
         return new RoleDto(
@@ -93,4 +107,6 @@ final readonly class DatabaseRoleRepository implements RoleRepository
             createdAt: Carbon::create($role->created_at),
         );
     }
+
+
 }

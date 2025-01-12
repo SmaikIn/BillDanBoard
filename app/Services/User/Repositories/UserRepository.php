@@ -91,6 +91,13 @@ final class UserRepository
         return $this->formatUserDto($dbUser);
     }
 
+    public function appendCompanyToUser(UuidInterface $companyId, UuidInterface $userId): void
+    {
+        $user = User::where('uuid', $userId->toString())->firstOrFail();
+
+        $user->companies()->attach($companyId);
+    }
+
     private function formatUserDto(User $user): UserDto
     {
         return new UserDto(

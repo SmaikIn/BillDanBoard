@@ -25,4 +25,6 @@ interface RoleService
      * @return string[]
      */
     public function getRolePermissions(UuidInterface $companyId, UuidInterface $roleId): array;
+
+    public function appendPermissionsToRole(UuidInterface $roleId, array $permissionIds): void;
 }
