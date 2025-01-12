@@ -18,7 +18,8 @@ class DatabaseSeeder extends Seeder
             UserCompanySeeder::class,
             DepartmentsSeeder::class,
             RolesSeeder::class,
-            ProfilesSeeder::class
+            ProfilesSeeder::class,
+            PermissionsSeeder::class
         ]);
         // \App\Models\User::factory(10)->create();
 

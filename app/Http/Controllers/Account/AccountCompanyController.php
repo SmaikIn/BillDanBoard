@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Account;
 
+use App\Dto\CompanyDto as CompanyFrontend;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Company\CreateCompanyRequest;
 use App\Http\Requests\Company\DeleteCompanyRequest;
@@ -11,6 +12,7 @@ use App\Http\Resources\CompanyResource;
 use App\Http\Responses\JsonApiResponse;
 use App\Http\Responses\JsonErrorResponse;
 use App\Services\Company\CompanyService;
+use App\Services\Company\Dto\CompanyDto;
 use App\Services\User\UserService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -32,7 +34,12 @@ class AccountCompanyController extends Controller
 
         $companiesIds = $this->userService->getCompanyIds($userId);
 
-        $companies = $this->companyService->findMany($companiesIds);
+        $dbCompanies = $this->companyService->findMany($companiesIds);
+
+        $companies = [];
+        foreach ($dbCompanies as $company) {
+            $companies[] = $this->formatCompanyDtoToFrontend($company);
+        }
 
         $companyCollection = CompanyResource::collection($companies);
 
@@ -49,7 +56,7 @@ class AccountCompanyController extends Controller
 
         //TODO profileService create profile in company
 
-        return new JsonApiResponse((CompanyResource::make($company))->toArray($request));
+        return new JsonApiResponse((CompanyResource::make($this->formatCompanyDtoToFrontend($company)))->toArray($request));
     }
 
     public function show(ShowCompanyRequest $request)
@@ -63,7 +70,7 @@ class AccountCompanyController extends Controller
 
         $company = $this->companyService->find($companyId);
 
-        return new JsonApiResponse((CompanyResource::make($company))->toArray($request));
+        return new JsonApiResponse((CompanyResource::make($this->formatCompanyDtoToFrontend($company)))->toArray($request));
     }
 
     public function update(UpdateCompanyRequest $request)
@@ -78,7 +85,7 @@ class AccountCompanyController extends Controller
 
         $company = $this->companyService->update($updateCompanyDto);
 
-        return new JsonApiResponse((CompanyResource::make($company))->toArray($request));
+        return new JsonApiResponse((CompanyResource::make($this->formatCompanyDtoToFrontend($company)))->toArray($request));
     }
 
     public function destroy(DeleteCompanyRequest $request)
@@ -115,5 +122,20 @@ class AccountCompanyController extends Controller
         }
 
         return $exists;
+    }
+
+    private function formatCompanyDtoToFrontend(CompanyDto $companyDto): CompanyFrontend
+    {
+        return new CompanyFrontend(
+            uuid: $companyDto->getUuid(),
+            name: $companyDto->getName(),
+            inn: $companyDto->getInn(),
+            kpp: $companyDto->getKpp(),
+            email: $companyDto->getEmail(),
+            phone: $companyDto->getPhone(),
+            url: $companyDto->getUrl(),
+            description: $companyDto->getDescription(),
+            isActive: $companyDto->isActive(),
+        );
     }
 }

@@ -31,6 +31,7 @@ Route::group(['prefix' => 'auth', 'middleware' => 'auth'], function () {
 Route::group(['prefix' => 'account', 'middleware' => 'auth'], function () {
     Route::apiResource('companies', \App\Http\Controllers\Account\AccountCompanyController::class);
     Route::group(['prefix' => 'company'], function () {
+        Route::get('{companyId}/roles/{roleId}/permissions', [AccountCompanyRoleController::class, 'getRolePermission'] );
         Route::apiResource('{companyId}/roles', AccountCompanyRoleController::class);
         Route::apiResource('{companyId}/departments', AccountCompanyDepartmentController::class);
         Route::post('{companyId}/profiles/accept/{code}', [AccountCompanyProfileController::class, 'acceptUserToCompany'])->withoutMiddleware('auth');

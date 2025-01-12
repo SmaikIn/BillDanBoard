@@ -2,6 +2,7 @@
 
 namespace App\Services\Role\Repositories;
 
+use App\Models\Permission;
 use App\Models\Role;
 use App\Services\Role\Dto\CreateRoleDto;
 use App\Services\Role\Dto\RoleDto;
@@ -69,6 +70,18 @@ final readonly class DatabaseRoleRepository implements RoleRepository
         $role = Role::where('company_uuid', $companyId->toString())->where('uuid', $roleId->toString())->firstOrFail();
 
         return $role->delete();
+    }
+
+    /**
+     * @param  UuidInterface  $companyId
+     * @param  UuidInterface  $roleId
+     * @return string[]
+     */
+    public function getRolePermissions(UuidInterface $companyId, UuidInterface $roleId): array
+    {
+        $role = Role::where('company_uuid', $companyId->toString())->where('uuid', $roleId->toString())->firstOrFail();
+
+        return $role->permissions()->pluck('uuid')->toArray();
     }
 
     public function formatToDto(Role $role): RoleDto

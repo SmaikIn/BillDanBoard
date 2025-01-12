@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Account;
 
+use App\Dto\DepartmentDto as DepartmentFrontend;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CompanyDepartment\CreateCompanyDepartmentRequest;
 use App\Http\Requests\CompanyDepartment\DeleteCompanyDepartmentRequest;
@@ -13,6 +14,7 @@ use App\Http\Responses\JsonApiResponse;
 use App\Http\Responses\JsonErrorResponse;
 use App\Services\Department\DepartmentService;
 use App\Services\Department\Dto\CreateDepartmentDto;
+use App\Services\Department\Dto\DepartmentDto;
 use App\Services\Department\Dto\UpdateDepartmentDto;
 use App\Services\User\UserService;
 use Illuminate\Support\Facades\Auth;
@@ -36,7 +38,12 @@ class AccountCompanyDepartmentController extends Controller
             return new JsonErrorResponse(__('errors.company.not exists'), status: Response::HTTP_FORBIDDEN);
         }
 
-        $departments = $this->departmentService->getDepartmentsByCompanyId($companyId);
+        $dbDepartments = $this->departmentService->getDepartmentsByCompanyId($companyId);
+
+        $departments = [];
+        foreach ($dbDepartments as $dbDepartment) {
+            $departments[] = $this->formatDepartmentDtoToFrontend($dbDepartment);
+        }
 
         return new JsonApiResponse(DepartmentResource::collection($departments)->toArray($request),
             status: Response::HTTP_OK);
@@ -54,9 +61,9 @@ class AccountCompanyDepartmentController extends Controller
             $request->input('departmentName')
         );
 
-        $Department = $this->departmentService->createDepartmentByCompanyId($dto);
+        $department = $this->departmentService->createDepartmentByCompanyId($dto);
 
-        return new JsonApiResponse(DepartmentResource::make($Department)->toArray($request),
+        return new JsonApiResponse(DepartmentResource::make($this->formatDepartmentDtoToFrontend($department))->toArray($request),
             status: Response::HTTP_CREATED);
     }
 
@@ -68,9 +75,10 @@ class AccountCompanyDepartmentController extends Controller
         }
 
         $departmentId = Uuid::fromString($request->input('departmentId'));
-        $Department = $this->departmentService->getDepartmentByCompanyId($companyId, $departmentId);
+        $department = $this->departmentService->getDepartmentByCompanyId($companyId, $departmentId);
 
-        return new JsonApiResponse(DepartmentResource::make($Department)->toArray($request), status: Response::HTTP_OK);
+        return new JsonApiResponse(DepartmentResource::make($this->formatDepartmentDtoToFrontend($department))->toArray($request),
+            status: Response::HTTP_OK);
     }
 
     public function update(UpdateCompanyDepartmentRequest $request)
@@ -86,9 +94,10 @@ class AccountCompanyDepartmentController extends Controller
             $request->input('departmentName'),
         );
 
-        $Department = $this->departmentService->updateDepartmentByCompanyId($dto);
+        $department = $this->departmentService->updateDepartmentByCompanyId($dto);
 
-        return new JsonApiResponse(DepartmentResource::make($Department)->toArray($request), status: Response::HTTP_OK);
+        return new JsonApiResponse(DepartmentResource::make($this->formatDepartmentDtoToFrontend($department))->toArray($request),
+            status: Response::HTTP_OK);
     }
 
     public function destroy(DeleteCompanyDepartmentRequest $request)
@@ -118,5 +127,15 @@ class AccountCompanyDepartmentController extends Controller
         }
 
         return Uuid::fromString($companyIds[$key]);
+    }
+
+    private function formatDepartmentDtoToFrontend(DepartmentDto $departmentDto): DepartmentFrontend
+    {
+        return new DepartmentFrontend(
+            uuid: $departmentDto->getId(),
+            companyUuid: $departmentDto->getCompanyId(),
+            name: $departmentDto->getName(),
+            createdAt: $departmentDto->getCreatedAt(),
+        );
     }
 }

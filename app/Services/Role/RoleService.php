@@ -18,4 +18,11 @@ interface RoleService
     public function updateRoleByCompanyId(UpdateRoleDto $roleDto): RoleDto;
 
     public function deleteRoleByCompanyId(UuidInterface $companyId, UuidInterface $roleId): bool;
+
+    /**
+     * @param  UuidInterface  $companyId
+     * @param  UuidInterface  $roleId
+     * @return string[]
+     */
+    public function getRolePermissions(UuidInterface $companyId, UuidInterface $roleId): array;
 }

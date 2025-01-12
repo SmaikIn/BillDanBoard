@@ -2,31 +2,42 @@
 
 namespace App\Services\Permission\Repositories;
 
-use App\Services\Permission\Dto\CreatePermissionDto;
-use App\Services\Permission\Dto\UpdatePermissionDto;
+use App\Models\Permission;
+use App\Services\Permission\Dto\PermissionDto;
+use Ramsey\Uuid\Uuid;
+
 final readonly class DatabasePermissionRepository implements PermissionRepository
 {
-    public function __construct(
-    ){
+    public function __construct()
+    {
     }
 
-    public function find(int $id){
-    //TODO logic
+
+    /**
+     * @param  string[]  $arrayIds
+     * @return PermissionDto[]
+     */
+    public function findMany(array $arrayIds): array
+    {
+        $dbPermissions = Permission::whereIn('uuid', $arrayIds)->get();
+
+        $permissions = [];
+        foreach ($dbPermissions as $dbPermission) {
+            $permissions[] = $this->formatToDto($dbPermission);
+        }
+
+        return $permissions;
     }
 
-    public function findMany(array $arrayIds){
-    //TODO logic
+    private function formatToDto(Permission $permission): PermissionDto
+    {
+        return new PermissionDto(
+            uuid: Uuid::fromString($permission->uuid),
+            name: $permission->name,
+            slug: $permission->slug,
+            description: $permission->description,
+        );
     }
 
-    public function delete(int $id){
-    //TODO logic
-    }
 
-    public function create(CreatePermissionDto $dto){
-    //TODO logic
-    }
-
-    public function update(UpdatePermissionDto $dto){
-    //TODO logic
-    }
 }

@@ -2,16 +2,23 @@
 
 namespace App\Http\Controllers\Account;
 
+use App\Dto\PermissionDto as PermissionFrontend;
+use App\Dto\RoleDto as RoleFrontend;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CompanyRole\CreateCompanyRoleRequest;
 use App\Http\Requests\CompanyRole\DeleteCompanyRoleRequest;
+use App\Http\Requests\CompanyRole\GetCompanyRolePermissionRequest;
 use App\Http\Requests\CompanyRole\IndexCompanyRoleRequest;
 use App\Http\Requests\CompanyRole\ShowCompanyRoleRequest;
 use App\Http\Requests\CompanyRole\UpdateCompanyRoleRequest;
+use App\Http\Resources\PermissionResource;
 use App\Http\Resources\RoleResource;
 use App\Http\Responses\JsonApiResponse;
 use App\Http\Responses\JsonErrorResponse;
+use App\Services\Permission\Dto\PermissionDto;
+use App\Services\Permission\PermissionService;
 use App\Services\Role\Dto\CreateRoleDto;
+use App\Services\Role\Dto\RoleDto;
 use App\Services\Role\Dto\UpdateRoleDto;
 use App\Services\Role\RoleService;
 use App\Services\User\UserService;
@@ -25,6 +32,7 @@ class AccountCompanyRoleController extends Controller
     public function __construct(
         private readonly UserService $userService,
         private readonly RoleService $roleService,
+        private readonly PermissionService $permissionService,
     ) {
     }
 
@@ -36,7 +44,13 @@ class AccountCompanyRoleController extends Controller
             return new JsonErrorResponse(__('errors.company.not exists'), status: Response::HTTP_FORBIDDEN);
         }
 
-        $roles = $this->roleService->getRolesByCompanyId($companyId);
+        $dbRoles = $this->roleService->getRolesByCompanyId($companyId);
+
+        $roles = [];
+        foreach ($dbRoles as $role) {
+            $roles[] = $this->formatRoleDtoToFrontend($role);
+        }
+
 
         return new JsonApiResponse(RoleResource::collection($roles)->toArray($request), status: Response::HTTP_OK);
     }
@@ -55,7 +69,8 @@ class AccountCompanyRoleController extends Controller
 
         $role = $this->roleService->createRoleByCompanyId($dto);
 
-        return new JsonApiResponse(RoleResource::make($role)->toArray($request), status: Response::HTTP_CREATED);
+        return new JsonApiResponse(RoleResource::make($this->formatRoleDtoToFrontend($role))->toArray($request),
+            status: Response::HTTP_CREATED);
     }
 
     public function show(ShowCompanyRoleRequest $request)
@@ -68,7 +83,8 @@ class AccountCompanyRoleController extends Controller
         $roleId = Uuid::fromString($request->input('roleId'));
         $role = $this->roleService->getRoleByCompanyId($companyId, $roleId);
 
-        return new JsonApiResponse(RoleResource::make($role)->toArray($request), status: Response::HTTP_OK);
+        return new JsonApiResponse(RoleResource::make($this->formatRoleDtoToFrontend($role))->toArray($request),
+            status: Response::HTTP_OK);
     }
 
     public function update(UpdateCompanyRoleRequest $request)
@@ -86,7 +102,8 @@ class AccountCompanyRoleController extends Controller
 
         $role = $this->roleService->updateRoleByCompanyId($dto);
 
-        return new JsonApiResponse(RoleResource::make($role)->toArray($request), status: Response::HTTP_OK);
+        return new JsonApiResponse(RoleResource::make($this->formatRoleDtoToFrontend($role))->toArray($request),
+            status: Response::HTTP_OK);
     }
 
     public function destroy(DeleteCompanyRoleRequest $request)
@@ -102,6 +119,46 @@ class AccountCompanyRoleController extends Controller
         return new JsonApiResponse([], status: Response::HTTP_OK);
     }
 
+    public function getRolePermission(GetCompanyRolePermissionRequest $request)
+    {
+        $companyId = $this->checkUserCompany($request->input('companyId'));
+        if (is_null($companyId)) {
+            return new JsonErrorResponse(__('errors.company.not exists'), status: Response::HTTP_FORBIDDEN);
+        }
+        $roleId = Uuid::fromString($request->input('roleId'));
+
+        $permissionIds = $this->roleService->getRolePermissions($companyId, $roleId);
+
+        $dbPermissions = $this->permissionService->findMany($permissionIds);
+
+        $permissions = [];
+        foreach ($dbPermissions as $dbPermission) {
+            $permissions[] = $this->formatPermissionDtoToFrontend($dbPermission);
+        }
+
+        return new JsonApiResponse(PermissionResource::collection($permissions)->toArray($request),
+            status: Response::HTTP_OK);
+    }
+
+    private function formatPermissionDtoToFrontend(PermissionDto $permissionDto): PermissionFrontend
+    {
+        return new PermissionFrontend(
+            uuid: $permissionDto->getUuid(),
+            name: $permissionDto->getName(),
+            slug: $permissionDto->getSlug(),
+            description: $permissionDto->getDescription(),
+        );
+    }
+
+    private function formatRoleDtoToFrontend(RoleDto $roleDto): RoleFrontend
+    {
+        return new RoleFrontend(
+            uuid: $roleDto->getId(),
+            companyUuid: $roleDto->getCompanyId(),
+            name: $roleDto->getName(),
+            createdAt: $roleDto->getCreatedAt(),
+        );
+    }
 
     private function checkUserCompany(string $companyId): ?UuidInterface
     {
