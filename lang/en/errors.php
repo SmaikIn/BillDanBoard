@@ -21,7 +21,8 @@ return [
         [
             'exists' => "company already exists ",
             'not exists' => "company not exists",
-            'wrong' => 'error when delete'
+            'wrong' => 'error when delete',
+            'update' => 'error when update'
         ],
     'user' =>
         [

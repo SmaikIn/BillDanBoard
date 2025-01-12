@@ -130,7 +130,12 @@ class AccountCompanyController extends Controller
         if (!$exists) {
             return new JsonErrorResponse(__('errors.company.not exists'), status: Response::HTTP_FORBIDDEN);
         }
-        //TODO profileService update check
+
+        $user = $this->userService->firstUserInCompany($updateCompanyDto->getUuid());
+
+        if($user->getId() != Auth::id()) {
+            return new JsonErrorResponse(__('errors.company.update'), status: Response::HTTP_FORBIDDEN);
+        }
 
         $company = $this->companyService->update($updateCompanyDto);
 
@@ -145,7 +150,12 @@ class AccountCompanyController extends Controller
         if (!$exists) {
             return new JsonErrorResponse(__('errors.company.not exists'), status: Response::HTTP_FORBIDDEN);
         }
-        //TODO profileService destroy check
+
+        $user = $this->userService->firstUserInCompany($companyId);
+
+        if($user->getId() != Auth::id()) {
+            return new JsonErrorResponse(__('errors.company.update'), status: Response::HTTP_FORBIDDEN);
+        }
 
         $result = $this->companyService->delete($companyId);
 
