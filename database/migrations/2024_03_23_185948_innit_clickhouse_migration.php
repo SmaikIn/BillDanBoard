@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up(): void
     {
-        $db = new ClickHouseDB\Client(config('database.connections.clickhouse'));
+       /* $db = new ClickHouseDB\Client(config('database.connections.clickhouse'));
 
         $db->database('default');
         $db->write(
@@ -53,7 +53,7 @@ return new class extends Migration {
                 updated_at DateTime DEFAULT now()
             ) ENGINE = MergeTree()
             ORDER BY (uuid);'
-        );
+        );*/
 
     }
 
