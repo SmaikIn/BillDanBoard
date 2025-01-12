@@ -14,11 +14,11 @@ final readonly class CompanyDto
      * @param  UuidInterface  $uuid
      * @param  string  $name
      * @param  Inn  $inn
-     * @param  Kpp  $kpp
+     * @param  Kpp|null  $kpp
      * @param  Email  $email
      * @param  Phone  $phone
-     * @param  string  $url
-     * @param  string  $description
+     * @param  string|null  $url
+     * @param  string|null  $description
      * @param  bool  $isActive
      */
     public function __construct(

@@ -212,6 +212,201 @@
         }
       }
     },
+    "/auth/updateAccount/{uuid}": {
+      "patch": {
+        "summary": "Обновление аккаунта по uuid",
+        "tags": [
+          "Авторизация"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "path",
+            "required": true,
+            "description": "UUID of the account to update",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "firstName": {
+                    "type": "string"
+                  },
+                  "lastName": {
+                    "type": "string"
+                  },
+                  "secondName": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string",
+                    "format": "email"
+                  },
+                  "phone": {
+                    "type": "string"
+                  },
+                  "avatar": {
+                    "type": "file"
+                  },
+                  "birthday": {
+                    "type": "string",
+                    "format": "date"
+                  },
+                  "yandexId": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Успешное получение информации о пользователе",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserResource"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/deleteAccount/{uuid}": {
+      "delete": {
+        "tags": [
+          "Авторизация"
+        ],
+        "summary": "Удаление аккаунта",
+        "description": "Удаляет аккаунт пользователя по указанному UUID.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "uuid",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Уникальный идентификатор аккаунта пользователя."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Успешное удаление аккаунта.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {}
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Ошибка доступа. Пользователь не имеет прав на удаление данного аккаунта.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "403"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/account/companies": {
+      "get": {
+        "tags": [
+          "Компании"
+        ],
+        "summary": "Получение компаний авторизованного пользователя",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Успешно получены компании",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CompanyResource"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/account/companies/{companyId}": {
+      "get": {
+        "tags": [
+          "Компании"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "companyId",
+            "required": true,
+            "description": "uuid компании",
+            "schema": {
+              "type": "uuid"
+            }
+          }
+        ],
+        "summary": "Получение компании пользователя",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Успешно получены компания",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CompanyResource"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Компания не найдена"
+          }
+        }
+      }
+    },
     "/account/company/{companyId}/roles": {
       "get": {
         "tags": [
@@ -452,6 +647,57 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/RoleResource"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "company not exists"
+          },
+          "404": {
+            "description": "Роль не найдена"
+          }
+        }
+      }
+    },
+    "/account/company/{companyId}/roles/{roleId}/permissions": {
+      "get": {
+        "tags": [
+          "Роли"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "companyId",
+            "required": true,
+            "description": "uuid компании",
+            "schema": {
+              "type": "uuid"
+            }
+          },
+          {
+            "in": "path",
+            "name": "roleId",
+            "required": true,
+            "description": "uuid роли",
+            "schema": {
+              "type": "uuid"
+            }
+          }
+        ],
+        "summary": "Получение прав роли в компании",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Успешно получены права",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PermissionResource"
                 }
               }
             }
@@ -718,124 +964,47 @@
         }
       }
     },
-    "auth/updateAccount/{uuid}": {
-      "patch": {
-        "summary": "Update an account by UUID",
+    "/account/company/{companyId}/profiles": {
+      "get": {
+        "tags": [
+          "Профили"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "companyId",
+            "required": true,
+            "description": "uuid компании",
+            "schema": {
+              "type": "uuid"
+            }
+          }
+        ],
+        "summary": "Получение Профиля компании относительно пользователя",
         "security": [
           {
             "bearerAuth": []
           }
         ],
-        "parameters": [
-          {
-            "name": "uuid",
-            "in": "path",
-            "required": true,
-            "description": "UUID of the account to update",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "firstName": {
-                    "type": "string"
-                  },
-                  "lastName": {
-                    "type": "string"
-                  },
-                  "secondName": {
-                    "type": "string"
-                  },
-                  "email": {
-                    "type": "string",
-                    "format": "email"
-                  },
-                  "phone": {
-                    "type": "string"
-                  },
-                  "avatar": {
-                    "type": "file"
-                  },
-                  "birthday": {
-                    "type": "string",
-                    "format": "date"
-                  },
-                  "yandexId": {
-                    "type": "string"
-                  }
-                }
-              }
-            }
-          }
-        },
         "responses": {
           "200": {
-            "description": "Успешное получение информации о пользователе",
+            "description": "Успешно получена Профиля",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/UserResource"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "auth/deleteAccount/{uuid}": {
-      "delete": {
-        "summary": "Удаление аккаунта",
-        "description": "Удаляет аккаунт пользователя по указанному UUID.",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "uuid",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "Уникальный идентификатор аккаунта пользователя."
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Успешное удаление аккаунта.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "array",
-                      "items": {}
-                    }
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProfileResource"
                   }
                 }
               }
             }
           },
           "403": {
-            "description": "Ошибка доступа. Пользователь не имеет прав на удаление данного аккаунта.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "error": {
-                      "type": "string",
-                      "example": "403"
-                    }
-                  }
-                }
-              }
-            }
+            "description": "company not exists"
+          },
+          "404": {
+            "description": "Профиль не найден"
           }
         }
       }
@@ -1108,6 +1277,133 @@
             "type": "string",
             "format": "date-time",
             "description": "Дата и время создания департамента"
+          }
+        }
+      },
+      "CompanyResource": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Уникальный идентификатор департамента"
+          },
+          "name": {
+            "type": "string",
+            "description": "Название департамента"
+          },
+          "inn": {
+            "type": "string",
+            "description": "Инн компании"
+          },
+          "kpp": {
+            "type": "string",
+            "description": "Кпп компании"
+          },
+          "email": {
+            "type": "string",
+            "description": "Электронная почта компании."
+          },
+          "phone": {
+            "type": "string",
+            "description": "Телефон компании"
+          },
+          "url": {
+            "type": "string",
+            "description": "Ссылка на сайт компании"
+          },
+          "description": {
+            "type": "string",
+            "description": "Описание компании"
+          },
+          "isActive": {
+            "type": "string",
+            "description": "Статус"
+          }
+        }
+      },
+      "PermissionResource": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Уникальный идентификатор права"
+          },
+          "name": {
+            "type": "string",
+            "description": "Название права"
+          },
+          "slug": {
+            "type": "string",
+            "description": "Slug права"
+          },
+          "description": {
+            "type": "string",
+            "description": "Описание права"
+          }
+        }
+      },
+      "ProfileResource": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Уникальный идентификатор права"
+          },
+          "name": {
+            "type": "string",
+            "description": "Название права"
+          },
+          "slug": {
+            "type": "string",
+            "description": "Slug права"
+          },
+          "description": {
+            "type": "string",
+            "description": "Описание права"
+          },
+          "firstName": {
+            "type": "string",
+            "description": "Имя"
+          },
+          "lastName": {
+            "type": "string",
+            "description": "Фамилия"
+          },
+          "secondName": {
+            "type": "string",
+            "description": "Отчество"
+          },
+          "phone": {
+            "type": "string",
+            "description": "Телефон"
+          },
+          "photo": {
+            "type": "string",
+            "description": "Ссылка на фотографию пользователя."
+          },
+          "email": {
+            "type": "string",
+            "description": "Электронная почта пользователя."
+          },
+          "birthday": {
+            "type": "string",
+            "description": "День рождения пользователя"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Дата создания пользователя"
+          },
+          "user": {
+            "$ref": "#/components/schemas/UserResource"
+          },
+          "company": {
+            "$ref": "#/components/schemas/CompanyResource"
+          },
+          "role": {
+            "$ref": "#/components/schemas/RoleResource"
+          },
+          "department": {
+            "$ref": "#/components/schemas/DepartmentResource"
           }
         }
       }

@@ -115,12 +115,17 @@ return [
         ],
         'role' => [
             'company' => 'company_roles_%s',
+            'permissions' => 'company_role_permissions_%s',
         ],
         'department' => [
             'company' => 'company_departments_%s',
         ],
         'profile' => [
             'company' => 'company_profiles_%s',
+        ],
+        'permission' =>[
+            'permission' => 'permission_%s',
+            'all' => 'permissions',
         ]
     ]
 ];

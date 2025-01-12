@@ -25,4 +25,6 @@ interface UserService
 
     public function firstUserInCompany(UuidInterface $companyId);
 
+    public function appendCompanyToUser(UuidInterface $companyId, UuidInterface $userId):void;
+
 }

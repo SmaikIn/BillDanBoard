@@ -19,4 +19,15 @@ interface RoleRepository
 
     public function deleteRoleByCompanyId(UuidInterface $companyId, UuidInterface $roleId): bool;
 
+    /**
+     * @param  UuidInterface  $companyId
+     * @param  UuidInterface  $roleId
+     * @return UuidInterface[]
+     */
+    public function getRolePermissions(UuidInterface $companyId, UuidInterface $roleId): array;
+
+    public function appendPermissionsToRole(UuidInterface $roleId, array $permissionIds): void;
+
+
+
 }

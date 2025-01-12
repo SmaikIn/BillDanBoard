@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Services\Permission\Dto;
+namespace App\Dto;
 
+use Carbon\Carbon;
 use Ramsey\Uuid\UuidInterface;
 
 final readonly class PermissionDto
@@ -14,7 +15,7 @@ final readonly class PermissionDto
     ) {
     }
 
-    public function getUuid(): UuidInterface
+    public function getId(): UuidInterface
     {
         return $this->uuid;
     }
@@ -33,4 +34,5 @@ final readonly class PermissionDto
     {
         return $this->description;
     }
+
 }

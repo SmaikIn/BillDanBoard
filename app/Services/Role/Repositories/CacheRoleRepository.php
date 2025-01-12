@@ -85,6 +85,30 @@ final readonly class CacheRoleRepository implements RoleRepository
         return $bool;
     }
 
+    /**
+     * @param  UuidInterface  $companyId
+     * @param  UuidInterface  $roleId
+     * @return UuidInterface[]
+     */
+    public function getRolePermissions(UuidInterface $companyId, UuidInterface $roleId): array
+    {
+        $key = sprintf($this->config->get('cache.keys.role.permissions'), $companyId->toString().$roleId->toString());
+
+        return $this->cache->remember(
+            $key,
+            Carbon::parse(self::CACHE_TTL_DAYS.' days'),
+            function () use ($companyId, $roleId) {
+                return;
+            },
+        );
+    }
+
+
+    public function appendPermissionsToRole(UuidInterface $roleId, array $permissionIds): void
+    {
+        $this->databaseRoleRepository->appendPermissionsToRole($roleId, $permissionIds);
+    }
+
     private function forgetCache(UuidInterface $companyId): void
     {
         $this->cache->forget($this->getKeyForCache($companyId->toString()));

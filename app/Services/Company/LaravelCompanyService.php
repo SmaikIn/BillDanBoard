@@ -35,7 +35,7 @@ final readonly class LaravelCompanyService implements CompanyService
     }
 
 
-    public function create(CreateCompanyDto $createCompanyDto)
+    public function create(CreateCompanyDto $createCompanyDto):CompanyDto
     {
         $company = $this->companyRepository->create($createCompanyDto);
 
