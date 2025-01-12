@@ -6,8 +6,9 @@ use App\Services\Mail\Dto\UserDto;
 use App\Services\Mail\MailService;
 use App\Services\User\Events\CreateUserEvent;
 use App\Services\User\UserService;
+use Illuminate\Contracts\Queue\ShouldQueue;
 
-final readonly class CreateUserListener
+final readonly class CreateUserListener implements ShouldQueue
 {
     public function __construct(
         private UserService $userService,

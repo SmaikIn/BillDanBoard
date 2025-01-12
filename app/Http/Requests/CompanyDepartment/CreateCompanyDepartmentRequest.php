@@ -21,6 +21,6 @@ class CreateCompanyDepartmentRequest extends FormRequest
 
     protected function prepareForValidation(): void
     {
-        $this->merge(['companyId' => $this->route('uuid')]);
+        $this->merge(['companyId' => $this->route('companyId')]);
     }
 }

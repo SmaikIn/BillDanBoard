@@ -3,16 +3,19 @@
 namespace App\Services\Permission;
 
 use App\Services\Permission\Dto\CreatePermissionDto;
+use App\Services\Permission\Dto\PermissionDto;
 use App\Services\Permission\Dto\UpdatePermissionDto;
 interface PermissionService
 {
-    public function find(int $id);
+    /**
+     * @param  array  $arrayIds
+     * @return PermissionDto[]
+     */
+    public function findMany(array $arrayIds): array;
 
-    public function findMany(array $arrayIds);
+    /**
+     * @return PermissionDto[]
+     */
+    public function all(): array;
 
-    public function delete(int $id);
-
-    public function create(CreatePermissionDto $dto);
-
-    public function update(UpdatePermissionDto $dto);
 }

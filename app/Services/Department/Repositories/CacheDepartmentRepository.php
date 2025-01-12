@@ -94,7 +94,7 @@ final readonly class CacheDepartmentRepository implements DepartmentRepository
 
     private function getKeyForCache(string $companyId): string
     {
-        return $this->config->get('cache.keys.department.company').'-'.$companyId;
+        return sprintf($this->config->get('cache.keys.department.company'), $companyId);
     }
 
 }

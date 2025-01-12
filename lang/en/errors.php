@@ -16,11 +16,13 @@ return [
     'warehouses' => 'check the warehouse data',
     'again' => 'Try again, something went wrong.',
     'catalog' => 'Unknown url',
+    'code' => 'Unknown code',
     'company' =>
         [
             'exists' => "company already exists ",
             'not exists' => "company not exists",
-            'wrong' => 'error when delete'
+            'wrong' => 'error when delete',
+            'update' => 'error when update'
         ],
     'user' =>
         [

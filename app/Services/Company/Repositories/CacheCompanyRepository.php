@@ -13,6 +13,7 @@ use Ramsey\Uuid\UuidInterface;
 final readonly class CacheCompanyRepository implements CompanyRepository
 {
     const CACHE_TTL_DAYS = CarbonInterface::DAYS_PER_WEEK;
+    const CACHE_TTL_INVITE = CarbonInterface::HOURS_PER_DAY;
 
     public function __construct(
         private DatabaseCompanyRepository $databaseCompanyRepository,
@@ -32,7 +33,7 @@ final readonly class CacheCompanyRepository implements CompanyRepository
         return $this->cache->remember(
             $key,
             Carbon::parse(self::CACHE_TTL_DAYS.' days'),
-            function ($companyId) {
+            function () use ($companyId) {
                 return $this->databaseCompanyRepository->find($companyId);
             },
         );
@@ -93,9 +94,32 @@ final readonly class CacheCompanyRepository implements CompanyRepository
         return $result;
     }
 
+    public function getInviteCode(string $code): ?string
+    {
+        $key = sprintf($this->config->get('cache.keys.company.invite_code'), $code);
+
+        try {
+            return $this->cache->get($key);
+        } catch (\Throwable $exception) {
+            return null;
+        }
+    }
+
+    public function setInviteCode(string $code): void
+    {
+        $key = sprintf($this->config->get('cache.keys.company.invite_code'), $code);
+        $this->cache->set($key, $code, Carbon::parse(self::CACHE_TTL_INVITE));
+    }
+
+    public function forgetInviteCode(string $code): void
+    {
+        $key = sprintf($this->config->get('cache.keys.company.invite_code'), $code);
+        $this->cache->forget($key);
+    }
+
     private function getKeyForCache(string $companyId): string
     {
-        return $this->config->get('cache.keys.company.company').'-'.$companyId;
+        return sprintf($this->config->get('cache.keys.company.company'), $companyId);
     }
 
 }

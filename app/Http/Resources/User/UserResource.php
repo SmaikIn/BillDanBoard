@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Resources\User;
 
-use App\Services\User\Dto\UserDto;
+use App\Dto\UserDto;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class UserResource extends JsonResource

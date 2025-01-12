@@ -2,6 +2,7 @@
 
 namespace App\Services\Role\Repositories;
 
+use App\Models\Permission;
 use App\Models\Role;
 use App\Services\Role\Dto\CreateRoleDto;
 use App\Services\Role\Dto\RoleDto;
@@ -71,6 +72,32 @@ final readonly class DatabaseRoleRepository implements RoleRepository
         return $role->delete();
     }
 
+    /**
+     * @param  UuidInterface  $companyId
+     * @param  UuidInterface  $roleId
+     * @return string[]
+     */
+    public function getRolePermissions(UuidInterface $companyId, UuidInterface $roleId): array
+    {
+        $role = Role::where('company_uuid', $companyId->toString())->where('uuid', $roleId->toString())->firstOrFail();
+
+        return $role->permissions()->pluck('uuid')->toArray();
+    }
+
+    public function appendPermissionsToRole(UuidInterface $roleId, array $permissionIds): void
+    {
+        $role = Role::findOrFail($roleId);
+
+        $currentPermissions = $role->permissions()->pluck('id')->toArray();
+
+        $newPermissions = array_diff($permissionIds, $currentPermissions);
+
+        if (!empty($newPermissions)) {
+            $role->permissions()->attach($newPermissions);
+        }
+    }
+
+
     public function formatToDto(Role $role): RoleDto
     {
         return new RoleDto(
@@ -80,4 +107,6 @@ final readonly class DatabaseRoleRepository implements RoleRepository
             createdAt: Carbon::create($role->created_at),
         );
     }
+
+
 }

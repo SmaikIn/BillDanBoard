@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Domain\ValueObjects\Email;
 use App\Domain\ValueObjects\Password;
+use App\Dto\UserDto as UserFrontend;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Resources\Auth\TokenResource;
@@ -13,6 +14,7 @@ use App\Http\Responses\JsonErrorResponse;
 use App\Services\Auth\AuthService;
 use App\Services\Auth\Dto\AuthAttemptDto;
 use App\Services\Auth\Dto\JWTDto;
+use App\Services\User\Dto\UserDto;
 use App\Services\User\UserService;
 use Illuminate\Http\Request;
 use InvalidArgumentException;
@@ -76,12 +78,27 @@ class AuthController extends Controller
 
     protected function respondWithToken(JWTDto $token): JsonApiResponse
     {
-
-        $userResource = new UserResource($this->userService->find($token->getPayload()->getUserId()));
+        $userResource = new UserResource($this->formatUserDtoToFrontend($this->userService->find($token->getPayload()->getUserId())));
         $tokenResource = new TokenResource($token);
 
         $responseData = array_merge($tokenResource->toArray(request()), ['user' => $userResource->toArray(request())]);
 
         return new JsonApiResponse($responseData);
+    }
+
+    private function formatUserDtoToFrontend(UserDto $userDto)
+    {
+        return new UserFrontend(
+            id: $userDto->getId(),
+            firstName: $userDto->getFirstName(),
+            lastName: $userDto->getLastName(),
+            secondName: $userDto->getSecondName(),
+            phone: $userDto->getPhone(),
+            photo: $userDto->getPhoto(),
+            email: $userDto->getEmail(),
+            yandexId: $userDto->getYandexId(),
+            birthday: $userDto->getBirthday(),
+            createdAt: $userDto->getCreatedAt(),
+        );
     }
 }
