@@ -34,7 +34,7 @@ class UpdateCompanyRequest extends FormRequest
 
     protected function prepareForValidation(): void
     {
-        $this->merge(['uuid' => $this->route('company')]);
+        $this->merge(['uuid' => $this->route('companyId')]);
     }
 
     public function getDto(): UpdateCompanyDto

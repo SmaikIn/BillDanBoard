@@ -6,26 +6,22 @@ use App\Domain\ValueObjects\Email;
 use App\Domain\ValueObjects\Inn;
 use App\Domain\ValueObjects\Kpp;
 use App\Domain\ValueObjects\Phone;
-use App\Services\Company\Dto\UpdateCompanyDto;
+use App\Services\Company\Dto\CreateCompanyDto;
 use Illuminate\Foundation\Http\FormRequest;
-use Ramsey\Uuid\Uuid;
 
-class ShowCompanyRequest extends FormRequest
+class IndexCompanyRequest extends FormRequest
 {
     public function rules(): array
     {
         return [
-            'uuid' => 'required|uuid',
+            'page' => [
+                'int'
+            ]
         ];
     }
 
     public function authorize(): bool
     {
         return true;
-    }
-
-    protected function prepareForValidation(): void
-    {
-        $this->merge(['uuid' => $this->route('companyId')]);
     }
 }

@@ -8,7 +8,7 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::create('companies', function (Blueprint $table) {
-            $table->uuid()->primary();
+            $table->uuid()->primary()->default(DB::raw('UUID()'));;
             $table->string('name');
             $table->string('inn');
             $table->string('kpp')->nullable();

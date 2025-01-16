@@ -12,7 +12,7 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::create('profiles', function (Blueprint $table) {
-            $table->uuid()->primary();
+            $table->uuid()->primary()->default(DB::raw('UUID()'));;
             $table->uuid('company_uuid')->change();
             $table->uuid('user_uuid')->change();
             $table->uuid('department_uuid')->nullable()->change();

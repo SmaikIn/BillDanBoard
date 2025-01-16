@@ -16,7 +16,7 @@ class RolesSeeder extends Seeder
         $companies = Company::all();
 
         foreach ($companies as $company) {
-            for ($i = 0; $i < 10; $i++) { // Создаем 10 ролей для каждой компании
+            for ($i = 0; $i < rand(1, 20); $i++) { // Создаем 10 ролей для каждой компании
                 Role::create([
                     'uuid' => $faker->uuid,
                     'company_uuid' => $company->uuid,
