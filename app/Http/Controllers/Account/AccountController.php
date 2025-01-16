@@ -2,14 +2,13 @@
 
 namespace App\Http\Controllers\Account;
 
-use App\Dto\UserDto as UserFrontend;
 use App\Http\Controllers\Controller;
+use App\Http\Formater\Formater;
 use App\Http\Requests\Account\CreateAccountRequest;
 use App\Http\Requests\Account\UpdateAccountRequest;
 use App\Http\Resources\User\UserResource;
 use App\Http\Responses\JsonApiResponse;
 use App\Http\Responses\JsonErrorResponse;
-use App\Services\User\Dto\UserDto;
 use App\Services\User\UserService;
 use Illuminate\Http\Request;
 use Ramsey\Uuid\Uuid;
@@ -18,7 +17,8 @@ use Symfony\Component\HttpFoundation\Response;
 class AccountController extends Controller
 {
     public function __construct(
-        private readonly UserService $userService
+        private readonly UserService $userService,
+        private readonly Formater $formater
     ) {
     }
 
@@ -28,7 +28,7 @@ class AccountController extends Controller
 
         $user = $this->userService->create($request->getDto($avatarPath));
 
-        return $this->returnUserResource($user, $request);
+        return new JsonApiResponse(UserResource::make($this->formater->formatUserDtoToFrontend($user))->toArray($request));
     }
 
     public function update(UpdateAccountRequest $request, $uuid)
@@ -41,7 +41,7 @@ class AccountController extends Controller
 
         $user = $this->userService->update($request->getDto($avatarPath));
 
-        return $this->returnUserResource($user, $request);
+        return new JsonApiResponse(UserResource::make($this->formater->formatUserDtoToFrontend($user))->toArray($request));
     }
 
     public function destroy($uuid)
@@ -68,25 +68,5 @@ class AccountController extends Controller
         }
 
         return $avatarPath;
-    }
-
-    private function returnUserResource(UserDto $userDto, $request)
-    {
-        $userResource = new UserResource(
-            new UserFrontend(
-                id: $userDto->getId(),
-                firstName: $userDto->getFirstName(),
-                lastName: $userDto->getLastName(),
-                secondName: $userDto->getSecondName(),
-                phone: $userDto->getPhone(),
-                photo: $userDto->getPhoto(),
-                email: $userDto->getEmail(),
-                yandexId: $userDto->getYandexId(),
-                birthday: $userDto->getBirthday(),
-                createdAt: $userDto->getCreatedAt(),
-            )
-        );
-
-        return new JsonApiResponse($userResource->toArray($request));
     }
 }

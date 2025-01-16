@@ -16,7 +16,7 @@ class DepartmentsSeeder extends Seeder
         $companies = Company::all();
 
         foreach ($companies as $company) {
-            for ($i = 0; $i < 5; $i++) { // Создаем 5 отделов для каждой компании
+            for ($i = 0; $i < rand(1, 10); $i++) { // Создаем 5 отделов для каждой компании
                 Department::create([
                     'uuid' => $faker->uuid,
                     'company_uuid' => $company->uuid,

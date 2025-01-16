@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Account\AccountCompanyController;
 use App\Http\Controllers\Account\AccountCompanyDepartmentController;
 use App\Http\Controllers\Account\AccountCompanyProfileController;
 use App\Http\Controllers\Account\AccountCompanyRoleController;
@@ -29,19 +30,21 @@ Route::group(['prefix' => 'auth', 'middleware' => 'auth'], function () {
     Route::get('me', [AuthController::class, 'me']);
 });
 Route::group(['prefix' => 'account', 'middleware' => 'auth'], function () {
-    Route::apiResource('companies', \App\Http\Controllers\Account\AccountCompanyController::class);
-    Route::group(['prefix' => 'company'], function () {
-        Route::get('{companyId}/roles/{roleId}/permissions', [AccountCompanyRoleController::class, 'getRolePermission'] );
+    Route::get('/companies', [AccountCompanyController::class, 'index']);
+    Route::post('/companies', [AccountCompanyController::class, 'store']);
+    Route::get('/companies/{companyId}', [AccountCompanyController::class, 'show'])->middleware('user-company');
+    Route::put('/companies/{companyId}', [AccountCompanyController::class, 'update'])->middleware('user-company');
+    Route::patch('/companies/{companyId}', [AccountCompanyController::class, 'update'])->middleware('user-company');
+    Route::delete('/companies/{companyId}', [AccountCompanyController::class, 'destroy'])->middleware('user-company');
+    Route::group(['prefix' => 'company', 'middleware' => 'user-company'], function () {
+        Route::get('{companyId}/roles/{roleId}/permissions',
+            [AccountCompanyRoleController::class, 'getRolePermission']);
         Route::apiResource('{companyId}/roles', AccountCompanyRoleController::class);
         Route::apiResource('{companyId}/departments', AccountCompanyDepartmentController::class);
-        Route::post('{companyId}/profiles/accept/{code}', [AccountCompanyProfileController::class, 'acceptUserToCompany'])->withoutMiddleware('auth');
+        Route::post('{companyId}/profiles/accept/{code}',
+            [AccountCompanyProfileController::class, 'acceptUserToCompany'])->withoutMiddleware('auth');
         Route::post('{companyId}/profiles/invite', [AccountCompanyProfileController::class, 'inviteUserToCompany']);
         Route::post('{companyId}/profiles/ban', [AccountCompanyProfileController::class, 'banProfile']);
         Route::apiResource('{companyId}/profiles', AccountCompanyProfileController::class)->except(['store']);
     });
-});
-
-
-Route::get('test', function () {
-    return view('emails.create-company');
 });

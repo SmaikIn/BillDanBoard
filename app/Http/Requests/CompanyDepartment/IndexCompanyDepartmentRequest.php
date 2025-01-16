@@ -10,6 +10,7 @@ class IndexCompanyDepartmentRequest extends FormRequest
     {
         return [
             'companyId' => 'required|uuid',
+            'page' => 'integer',
         ];
     }
 

@@ -2,17 +2,18 @@
 
 namespace App\Http\Controllers\Account;
 
-use App\Dto\CompanyDto as CompanyFrontend;
+use App\Enum\Resource;
 use App\Http\Controllers\Controller;
+use App\Http\Formater\Formater;
 use App\Http\Requests\Company\CreateCompanyRequest;
 use App\Http\Requests\Company\DeleteCompanyRequest;
+use App\Http\Requests\Company\IndexCompanyRequest;
 use App\Http\Requests\Company\ShowCompanyRequest;
 use App\Http\Requests\Company\UpdateCompanyRequest;
 use App\Http\Resources\CompanyResource;
 use App\Http\Responses\JsonApiResponse;
 use App\Http\Responses\JsonErrorResponse;
 use App\Services\Company\CompanyService;
-use App\Services\Company\Dto\CompanyDto;
 use App\Services\Department\DepartmentService;
 use App\Services\Department\Dto\CreateDepartmentDto;
 use App\Services\Permission\PermissionService;
@@ -21,10 +22,8 @@ use App\Services\Profile\ProfileService;
 use App\Services\Role\Dto\CreateRoleDto;
 use App\Services\Role\RoleService;
 use App\Services\User\UserService;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Ramsey\Uuid\Uuid;
-use Ramsey\Uuid\UuidInterface;
 use Symfony\Component\HttpFoundation\Response;
 
 class AccountCompanyController extends Controller
@@ -36,10 +35,11 @@ class AccountCompanyController extends Controller
         private readonly DepartmentService $departmentService,
         private readonly PermissionService $permissionService,
         private readonly ProfileService $profileService,
+        private readonly Formater $formater,
     ) {
     }
 
-    public function index(Request $request)
+    public function index(IndexCompanyRequest $request)
     {
         $userId = Uuid::fromString(Auth::id());
 
@@ -49,12 +49,12 @@ class AccountCompanyController extends Controller
 
         $companies = [];
         foreach ($dbCompanies as $company) {
-            $companies[] = $this->formatCompanyDtoToFrontend($company);
+            $companies[] = $this->formater->formatCompanyDtoToFrontend($company);
         }
 
-        $companyCollection = CompanyResource::collection($companies);
+        $pagination = $this->formater->formatPagination($companies, Resource::Company, $request->get('page', 1));
 
-        return new JsonApiResponse($companyCollection->toArray($request));
+        return new JsonApiResponse($pagination->toArray($request), status: Response::HTTP_OK);
     }
 
     public function store(CreateCompanyRequest $request)
@@ -105,55 +105,40 @@ class AccountCompanyController extends Controller
         );
         $profile = $this->profileService->createProfile($createProfileDto);
 
-        return new JsonApiResponse((CompanyResource::make($this->formatCompanyDtoToFrontend($company)))->toArray($request));
+        return new JsonApiResponse((CompanyResource::make($this->formater->formatCompanyDtoToFrontend($company)))->toArray($request));
     }
 
     public function show(ShowCompanyRequest $request)
     {
         $companyId = Uuid::fromString($request->get('uuid'));
 
-        $exists = $this->checkUserCompany($companyId);
-        if (!$exists) {
-            return new JsonErrorResponse(__('errors.company.not exists'), status: Response::HTTP_FORBIDDEN);
-        }
-
         $company = $this->companyService->find($companyId);
 
-        return new JsonApiResponse((CompanyResource::make($this->formatCompanyDtoToFrontend($company)))->toArray($request));
+        return new JsonApiResponse((CompanyResource::make($this->formater->formatCompanyDtoToFrontend($company)))->toArray($request));
     }
 
     public function update(UpdateCompanyRequest $request)
     {
         $updateCompanyDto = $request->getDto();
 
-        $exists = $this->checkUserCompany(Uuid::fromString($request->get('uuid')));
-        if (!$exists) {
-            return new JsonErrorResponse(__('errors.company.not exists'), status: Response::HTTP_FORBIDDEN);
-        }
-
         $user = $this->userService->firstUserInCompany($updateCompanyDto->getUuid());
 
-        if($user->getId() != Auth::id()) {
+        if ($user->getId() != Auth::id()) {
             return new JsonErrorResponse(__('errors.company.update'), status: Response::HTTP_FORBIDDEN);
         }
 
         $company = $this->companyService->update($updateCompanyDto);
 
-        return new JsonApiResponse((CompanyResource::make($this->formatCompanyDtoToFrontend($company)))->toArray($request));
+        return new JsonApiResponse((CompanyResource::make($this->formater->formatCompanyDtoToFrontend($company)))->toArray($request));
     }
 
     public function destroy(DeleteCompanyRequest $request)
     {
         $companyId = Uuid::fromString($request->get('uuid'));
 
-        $exists = $this->checkUserCompany($companyId);
-        if (!$exists) {
-            return new JsonErrorResponse(__('errors.company.not exists'), status: Response::HTTP_FORBIDDEN);
-        }
-
         $user = $this->userService->firstUserInCompany($companyId);
 
-        if($user->getId() != Auth::id()) {
+        if ($user->getId() != Auth::id()) {
             return new JsonErrorResponse(__('errors.company.update'), status: Response::HTTP_FORBIDDEN);
         }
 
@@ -166,35 +151,5 @@ class AccountCompanyController extends Controller
         return new JsonApiResponse([]);
     }
 
-    private function checkUserCompany(UuidInterface $id): bool
-    {
-        $userId = Uuid::fromString(Auth::id());
 
-        $companiesIds = $this->userService->getCompanyIds($userId);
-
-        $exists = false;
-        foreach ($companiesIds as $companiesId) {
-            if ($companiesId == $id->toString()) {
-                $exists = true;
-                break;
-            }
-        }
-
-        return $exists;
-    }
-
-    private function formatCompanyDtoToFrontend(CompanyDto $companyDto): CompanyFrontend
-    {
-        return new CompanyFrontend(
-            uuid: $companyDto->getUuid(),
-            name: $companyDto->getName(),
-            inn: $companyDto->getInn(),
-            kpp: $companyDto->getKpp(),
-            email: $companyDto->getEmail(),
-            phone: $companyDto->getPhone(),
-            url: $companyDto->getUrl(),
-            description: $companyDto->getDescription(),
-            isActive: $companyDto->isActive(),
-        );
-    }
 }

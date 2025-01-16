@@ -12,7 +12,7 @@ class CompaniesTableSeeder extends Seeder
     {
         $faker = Faker::create();
 
-        foreach (range(1, 10) as $index) {
+        foreach (range(1, 15) as $index) {
             Company::create([
                 'uuid' => $faker->unique()->uuid,
                 'name' => $faker->company,
