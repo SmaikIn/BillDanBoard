@@ -13,8 +13,15 @@ class UserCompanySeeder extends Seeder
         $users = User::all();
 
         foreach ($users as $user) {
-            $company = Company::inRandomOrder()->first();
-            $user->companies()->attach($company->uuid);
+            $q = rand(1, 4);
+            $i = 0;
+            foreach (Company::inRandomOrder()->get() as $company) {
+                $user->companies()->attach($company->uuid);
+                $i++;
+                if ($i == $q) {
+                    break;
+                }
+            }
         }
     }
 }

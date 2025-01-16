@@ -43,7 +43,7 @@ class AccountCompanyRoleController extends Controller
 
         $pagination = $this->formater->formatPagination($roles, Resource::Role, $request->get('page', 1));
 
-        return new JsonApiResponse(RoleResource::collection($roles)->toArray($request), status: Response::HTTP_OK);
+        return new JsonApiResponse($pagination->toArray($request), status: Response::HTTP_OK);
     }
 
     public function store(CreateCompanyRoleRequest $request)

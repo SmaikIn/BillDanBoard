@@ -6,7 +6,7 @@ use App\Models\Profile;
 use App\Models\User;
 use Faker\Factory as Faker;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
+use Ramsey\Uuid\Uuid;
 
 class ProfilesSeeder extends Seeder
 {
@@ -16,10 +16,9 @@ class ProfilesSeeder extends Seeder
         $faker = Faker::create();
 
         foreach ($users as $user) {
-            $companies = $user->companies;
-            foreach ($companies as $company) {
-                Profile::create([
-                    'uuid' => $faker->uuid,
+            foreach ($user->companies()->get() as $company) {
+                $array = [
+                    'uuid' => Uuid::uuid4(),
                     'first_name' => $user->first_name,
                     'last_name' => $user->last_name,
                     'second_name' => $user->second_name,
@@ -35,7 +34,8 @@ class ProfilesSeeder extends Seeder
                     'role_uuid' => $company->roles()->inRandomOrder()->first()->uuid ?? null,
                     'created_at' => now(),
                     'updated_at' => now(),
-                ]);
+                ];
+                Profile::create($array);
             }
         }
     }

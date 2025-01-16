@@ -9,7 +9,7 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::create('roles', function (Blueprint $table) {
-            $table->uuid()->primary()->default(DB::raw('UUID()'));
+            $table->uuid()->primary();
             $table->uuid('company_uuid')->change();
             $table->string('name');
 

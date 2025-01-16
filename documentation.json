@@ -351,15 +351,34 @@
             "bearerAuth": []
           }
         ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "page",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "номер страницы"
+          }
+        ],
         "responses": {
           "200": {
-            "description": "Успешно получены компании",
+            "description": "Запрос выполнен успешно",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/CompanyResource"
+                  "type": "object",
+                  "properties": {
+                    "companies": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/CompanyResource"
+                      }
+                    },
+                    "pagination": {
+                      "$ref": "#/components/schemas/PaginatedResource"
+                    }
                   }
                 }
               }
@@ -392,7 +411,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Успешно получены компания",
+            "description": "Успешно получена компания",
             "content": {
               "application/json": {
                 "schema": {
@@ -405,6 +424,8 @@
             "description": "Компания не найдена"
           }
         }
+      },
+      "post": {
       }
     },
     "/account/company/{companyId}/roles": {
@@ -1404,6 +1425,27 @@
           },
           "department": {
             "$ref": "#/components/schemas/DepartmentResource"
+          }
+        }
+      },
+      "PaginatedResource": {
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "description": "Полученное количество"
+          },
+          "currentPage": {
+            "type": "integer",
+            "description": "Текущая страница"
+          },
+          "lastPage": {
+            "type": "integer",
+            "description": "Последняя страница"
+          },
+          "perPage": {
+            "type": "integer",
+            "description": "Макс кол-во на стр"
           }
         }
       }

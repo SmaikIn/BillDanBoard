@@ -31,7 +31,7 @@ class AccountCompanyDepartmentController extends Controller
 
     public function index(IndexCompanyDepartmentRequest $request)
     {
-        $companyId = Uuid::fromString($request->input('company_id'));
+        $companyId = Uuid::fromString($request->get('companyId'));
 
         $dbDepartments = $this->departmentService->getDepartmentsByCompanyId($companyId);
 
@@ -47,7 +47,7 @@ class AccountCompanyDepartmentController extends Controller
 
     public function store(CreateCompanyDepartmentRequest $request)
     {
-        $companyId = Uuid::fromString($request->input('company_id'));
+        $companyId = Uuid::fromString($request->input('companyId'));
 
         $dto = new CreateDepartmentDto(
             $companyId,
@@ -62,7 +62,7 @@ class AccountCompanyDepartmentController extends Controller
 
     public function show(ShowCompanyDepartmentRequest $request)
     {
-        $companyId = Uuid::fromString($request->input('company_id'));
+        $companyId = Uuid::fromString($request->input('companyId'));
 
         $departmentId = Uuid::fromString($request->input('departmentId'));
         $department = $this->departmentService->getDepartmentByCompanyId($companyId, $departmentId);
@@ -87,7 +87,7 @@ class AccountCompanyDepartmentController extends Controller
 
     public function destroy(DeleteCompanyDepartmentRequest $request)
     {
-        $companyId = Uuid::fromString($request->input('company_id'));
+        $companyId = Uuid::fromString($request->input('companyId'));
 
         $departmentId = Uuid::fromString($request->input('departmentId'));
         $this->departmentService->deleteDepartmentByCompanyId($companyId, $departmentId);

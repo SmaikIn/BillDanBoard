@@ -59,9 +59,10 @@ final readonly class Formater
         $dto = new PaginationDto(
             $collection,
             $resource,
+            $paginator->perPage(),
             $total,
             $paginator->currentPage(),
-            $paginator->perPage(),
+            $paginator->lastPage(),
         );
 
         return PaginateResource::make($dto);

@@ -13,6 +13,7 @@ final readonly class PaginationDto
     public function __construct(
         private JsonResource $items,
         private Resource $resourceName,
+        private int $perPage,
         private int $total = 0,
         private int $currentPage = 1,
         private int $lastPage = 1,
@@ -42,6 +43,11 @@ final readonly class PaginationDto
     public function getResourceName(): Resource
     {
         return $this->resourceName;
+    }
+
+    public function getPerPage(): int
+    {
+        return $this->perPage;
     }
 
 }

@@ -3,7 +3,6 @@
 namespace App\Http\Resources;
 
 use App\Dto\PaginationDto;
-use App\Dto\RoleDto;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -18,9 +17,13 @@ class PaginateResource extends JsonResource
 
         return [
             $paginate->getResourceName()->value => $paginate->getItems(),
-            'total' => $paginate->getTotal(),
-            'currentPage' => $paginate->getCurrentPage(),
-            'lastPage' => $paginate->getLastPage(),
+            'pagination' => [
+                'total' => $paginate->getTotal(),
+                'currentPage' => $paginate->getCurrentPage(),
+                'lastPage' => $paginate->getLastPage(),
+                'perPage' => $paginate->getPerPage(),
+            ],
+
         ];
     }
 }
