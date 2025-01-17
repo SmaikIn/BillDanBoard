@@ -10,6 +10,7 @@ use App\Models\Company;
 use App\Services\Company\Dto\CompanyDto;
 use App\Services\Company\Dto\CreateCompanyDto;
 use App\Services\Company\Dto\UpdateCompanyDto;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 
@@ -22,7 +23,6 @@ final class DatabaseCompanyRepository implements CompanyRepository
     public function create(CreateCompanyDto $createCompanyDto): CompanyDto
     {
         $company = Company::create([
-                'uuid' => Uuid::uuid4()->toString(),
                 'name' => $createCompanyDto->getName(),
                 'inn' => $createCompanyDto->getInn(),
                 'kpp' => $createCompanyDto->getKpp(),
@@ -40,6 +40,7 @@ final class DatabaseCompanyRepository implements CompanyRepository
     public function update(UpdateCompanyDto $updateCompanyDto): CompanyDto
     {
         $dbCompany = Company::where('uuid', $updateCompanyDto->getUuid()->toString())->firstOrFail();
+
 
         $dbCompany->name = $updateCompanyDto->getName();
         $dbCompany->inn = $updateCompanyDto->getInn();

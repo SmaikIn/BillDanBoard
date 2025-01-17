@@ -8,12 +8,12 @@ use App\Services\User\Dto\UserDto;
 use App\Services\User\Events\CreateUserEvent;
 use App\Services\User\Repositories\UserRepository;
 use Illuminate\Contracts\Events\Dispatcher;
+use Illuminate\Support\Facades\Event;
 use Ramsey\Uuid\UuidInterface;
 
 final readonly class LaravelUserService implements UserService
 {
     public function __construct(
-        private Dispatcher $dispatcher,
         private UserRepository $userRepository,
     ) {
     }
@@ -32,7 +32,7 @@ final readonly class LaravelUserService implements UserService
     {
         $user = $this->userRepository->create($createUserDto);
 
-        $this->dispatcher->dispatch(new CreateUserEvent($user->getId()));
+        Event::dispatch(new CreateUserEvent($user->getId()));
 
         return $user;
     }

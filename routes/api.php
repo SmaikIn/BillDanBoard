@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::group(['prefix' => 'auth', 'middleware' => 'auth'], function () {
-    Route::post('register', [AccountController::class, 'store'])->withoutMiddleware(['auth']);
+    Route::post('register', [AccountController::class, 'store'])->withoutMiddleware(['auth'])->name('register');
     Route::patch('updateAccount/{uuid}', [AccountController::class, 'update']);
     Route::delete('deleteAccount/{uuid}', [AccountController::class, 'destroy']);
 
@@ -47,4 +47,10 @@ Route::group(['prefix' => 'account', 'middleware' => 'auth'], function () {
         Route::post('{companyId}/profiles/ban', [AccountCompanyProfileController::class, 'banProfile']);
         Route::apiResource('{companyId}/profiles', AccountCompanyProfileController::class)->except(['store']);
     });
+});
+
+Route::get('test', function () {
+    dd(\File::get('vector-users-icon.jpg'));
+    return Storage::disk('local')->get('vector-users-icon.jpg');
+    return asset('vector-users-icon.jpg');
 });

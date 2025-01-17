@@ -67,6 +67,31 @@ services:
     networks:
       - app-network
 
+  test_db:
+    container_name: diplom_test_db
+    #platform: linux/x86_64 # uncomment for MacBook M1
+    build:
+      context: ./
+      dockerfile: .docker/mysql/Dockerfile
+    ports:
+      - "3309:3308" # Используем другой порт, чтобы избежать конфликта
+    environment:
+      MYSQL_DATABASE: 'test_database' # Новая база данных для тестов
+      MYSQL_USER: '${DB_USERNAME}'
+      MYSQL_PASSWORD: '${DB_PASSWORD}'
+      MYSQL_ROOT_HOST: "%"
+      MYSQL_ROOT_PASSWORD: '${DB_PASSWORD}'
+      SERVICE_TAGS: dev
+      SERVICE_NAME: mysql
+      MYSQL_TCP_PORT: '3308'
+      MYSQL_ALLOW_EMPTY_PASSWORD: 1
+    volumes:
+      - .docker/mysql/my.cnf:/etc/mysql/my.cnf
+      - .docker/data/mysql/test-mysql-data:/var/lib/mysql/
+      - .docker/data/mysql/test-mysql-files:/var/lib/mysql-files
+    networks:
+      - app-network
+
   # ClickHouse service
   clickhouse:
     build:

@@ -18,7 +18,6 @@ class ProfilesSeeder extends Seeder
         foreach ($users as $user) {
             foreach ($user->companies()->get() as $company) {
                 $array = [
-                    'uuid' => Uuid::uuid4(),
                     'first_name' => $user->first_name,
                     'last_name' => $user->last_name,
                     'second_name' => $user->second_name,

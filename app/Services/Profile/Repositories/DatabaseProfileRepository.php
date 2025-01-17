@@ -82,7 +82,6 @@ final readonly class DatabaseProfileRepository implements ProfileRepository
     {
         $profile = new Profile();
 
-        $profile->uuid = Uuid::uuid4()->toString();
         $profile->company_uuid = $profileDto->getCompanyId()->toString();
         $profile->department_uuid = $profileDto->getDepartmentId()->toString();
         $profile->role_uuid = $profileDto->getRoleId()->toString();

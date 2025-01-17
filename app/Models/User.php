@@ -10,6 +10,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
 use Laravel\Sanctum\HasApiTokens;
+use Ramsey\Uuid\Uuid;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class User extends Authenticatable implements JWTSubject
@@ -25,7 +26,11 @@ class User extends Authenticatable implements JWTSubject
         parent::boot();
 
         static::creating(function ($model) {
-            $model->uuid = (string) Str::uuid(); // Генерация UUID перед созданием
+            do {
+                $uuid = Uuid::uuid4()->toString();
+            } while (self::where('uuid', $uuid)->exists());
+
+            $model->uuid = $uuid;
         });
     }
 

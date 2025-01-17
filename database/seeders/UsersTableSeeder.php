@@ -14,8 +14,8 @@ class UsersTableSeeder extends Seeder
     {
         $faker = Faker::create();
 
-        foreach (range(1, 2000) as $index) {
-            DB::table('users')->insert([
+        foreach (range(1, 100) as $index) {
+            DB::table('users')->insertOrIgnore([
                 'uuid' => $faker->uuid,
                 'first_name' => $faker->firstName,
                 'last_name' => $faker->lastName,

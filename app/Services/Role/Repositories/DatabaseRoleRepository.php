@@ -44,7 +44,6 @@ final readonly class DatabaseRoleRepository implements RoleRepository
     public function createRoleByCompanyId(CreateRoleDto $roleDto): RoleDto
     {
         $role = new Role();
-        $role->uuid = Uuid::uuid4()->toString();
         $role->company_uuid = $roleDto->getCompanyUuid()->toString();
         $role->name = $roleDto->getName();
         $role->created_at = Carbon::now();

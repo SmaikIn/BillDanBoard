@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Str;
 use Ramsey\Uuid\Uuid;
 
 abstract class ModelWithUuid extends Model
@@ -12,12 +11,16 @@ abstract class ModelWithUuid extends Model
     protected $primaryKey = 'uuid';
     protected $keyType = 'string';
 
-   /* protected static function boot()
+    protected static function boot(): void
     {
         parent::boot();
 
         static::creating(function ($model) {
-            $model->uuid = (string) Str::uuid(); // Генерация UUID перед созданием
+            do {
+                $uuid = Uuid::uuid4()->toString();
+            } while (self::where('uuid', $uuid)->exists());
+
+            $model->uuid = $uuid;
         });
-    }*/
+    }
 }

@@ -44,7 +44,6 @@ final readonly class DatabaseDepartmentRepository implements DepartmentRepositor
     public function createDepartmentByCompanyId(CreateDepartmentDto $DepartmentDto): DepartmentDto
     {
         $Department = new Department();
-        $Department->uuid = Uuid::uuid4()->toString();
         $Department->company_uuid = $DepartmentDto->getCompanyUuid()->toString();
         $Department->name = $DepartmentDto->getName();
         $Department->created_at = Carbon::now();

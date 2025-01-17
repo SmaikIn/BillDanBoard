@@ -385,6 +385,42 @@
             }
           }
         }
+      },
+      "post": {
+        "tags": [
+          "Компании"
+        ],
+        "summary": "Создание компании пользователя",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCompanyRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Успешно создана компания",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CompanyResource"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Ошибка создания"
+          }
+        }
       }
     },
     "/account/companies/{companyId}": {
@@ -425,7 +461,96 @@
           }
         }
       },
-      "post": {
+
+      "patch": {
+        "tags": [
+          "Компании"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "companyId",
+            "required": true,
+            "description": "uuid компании",
+            "schema": {
+              "type": "uuid"
+            }
+          }
+        ],
+        "summary": "Обновление роли компании относительно пользователя",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCompanyRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Успешно получена роль",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CompanyResource"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "forbidden"
+          },
+          "404": {
+            "description": "Компания не найдена"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Компании"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "companyId",
+            "required": true,
+            "description": "uuid компании",
+            "schema": {
+              "type": "uuid"
+            }
+          }
+        ],
+        "summary": "Удаление компании пользователя",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Успешно удалена компания",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CompanyResource"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "forbidden"
+          },
+          "404": {
+            "description": "Компания не найдена"
+          }
+        }
       }
     },
     "/account/company/{companyId}/roles": {
@@ -1066,6 +1191,130 @@
       }
     },
     "schemas": {
+
+      "LoginRequest": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "password": {
+            "type": "string"
+          }
+        },
+        "example": {
+          "email": "john@example.com",
+          "password": "secret123"
+        }
+      },
+      "CreateRoleRequest": {
+        "type": "object",
+        "properties": {
+          "companyId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Уникальный идентификатор компании (UUID)"
+          },
+          "roleName": {
+            "type": "string",
+            "required": true,
+            "description": "Название роли"
+          }
+        }
+      },
+      "CreateDepartmentRequest": {
+        "type": "object",
+        "properties": {
+          "companyId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Уникальный идентификатор компании (UUID)"
+          },
+          "departmentName": {
+            "type": "string",
+            "required": true,
+            "description": "Название департамента"
+          }
+        }
+      },
+      "CreateCompanyRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 255
+          },
+          "inn": {
+            "type": "string",
+            "maxLength": 12
+          },
+          "kpp": {
+            "type": "string",
+            "maxLength": 9,
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "phone": {
+            "type": "string",
+            "maxLength": 20
+          },
+          "website": {
+            "type": "string",
+            "maxLength": 255,
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": ["name", "inn", "email", "phone"]
+      },
+      "UpdateCompanyRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 255
+          },
+          "inn": {
+            "type": "string",
+            "maxLength": 12
+          },
+          "kpp": {
+            "type": "string",
+            "maxLength": 9,
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "phone": {
+            "type": "string",
+            "maxLength": 20
+          },
+          "website": {
+            "type": "string",
+            "maxLength": 255,
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "isActive": {
+            "type": "bool",
+            "nullable": true
+          }
+        },
+        "required": ["name", "inn", "email", "phone"]
+      },
+
       "UserResource": {
         "type": "object",
         "properties": {
@@ -1116,22 +1365,6 @@
           "avatar": "http://127.0.0.1/avatar.svg",
           "birthday": "Mon Jun 21 1993 00:00:00 GMT+0000",
           "created_at": "Sat Mar 16 2024 12:38:40 GMT+0000"
-        }
-      },
-      "LoginRequest": {
-        "type": "object",
-        "properties": {
-          "email": {
-            "type": "string",
-            "format": "email"
-          },
-          "password": {
-            "type": "string"
-          }
-        },
-        "example": {
-          "email": "john@example.com",
-          "password": "secret123"
         }
       },
       "AuthResource": {
@@ -1227,21 +1460,6 @@
           }
         }
       },
-      "CreateRoleRequest": {
-        "type": "object",
-        "properties": {
-          "companyId": {
-            "type": "string",
-            "format": "uuid",
-            "description": "Уникальный идентификатор компании (UUID)"
-          },
-          "roleName": {
-            "type": "string",
-            "required": true,
-            "description": "Название роли"
-          }
-        }
-      },
       "RoleResource": {
         "type": "object",
         "properties": {
@@ -1261,21 +1479,6 @@
             "type": "string",
             "format": "date-time",
             "description": "Дата и время создания роли"
-          }
-        }
-      },
-      "CreateDepartmentRequest": {
-        "type": "object",
-        "properties": {
-          "companyId": {
-            "type": "string",
-            "format": "uuid",
-            "description": "Уникальный идентификатор компании (UUID)"
-          },
-          "departmentName": {
-            "type": "string",
-            "required": true,
-            "description": "Название департамента"
           }
         }
       },

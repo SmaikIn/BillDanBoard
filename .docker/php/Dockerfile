@@ -24,17 +24,14 @@ RUN apt-get update && apt-get install -y \
     curl \
     \
     # add pgsql and pdo_pgsql, if you use PostgreSQL
-    && docker-php-ext-install pdo_mysql mbstring zip exif pcntl gd soap \
+    && docker-php-ext-install pdo_mysql mbstring zip exif pcntl soap bcmath sockets\
     && docker-php-ext-configure gd --with-freetype --with-webp --with-jpeg \
+    && docker-php-ext-install gd \
     \
     # clean cache
     && apt-get clean && rm -rf /var/lib/apt/lists/* \
     # install composer
     && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
-    \
-    #install nodejs
-    && curl -fsSL https://deb.nodesource.com/setup_current.x | bash - \
-    && apt-get install -y nodejs \
     \
     #intsall xdebug
    && pecl install xdebug \

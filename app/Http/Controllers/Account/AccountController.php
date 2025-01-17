@@ -62,7 +62,7 @@ class AccountController extends Controller
     private function getAvatarPath(Request $request): string
     {
         if ($request->hasFile('avatar')) {
-            $avatarPath = $request->file('avatar')->store('avatars', 'public');
+            $avatarPath = $request->file('avatar')->store('avatars');
         } else {
             $avatarPath = 'avatar.svg';
         }

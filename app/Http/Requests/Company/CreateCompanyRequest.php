@@ -37,7 +37,7 @@ class CreateCompanyRequest extends FormRequest
             kpp: $this->exists('kpp') ? Kpp::create($this->get('kpp')) : null,
             email: Email::create($this->get('email')),
             phone: Phone::create($this->get('phone')),
-            url: $this->get('url'),
+            url: $this->get('website'),
             description: $this->get('description'),
         );
     }

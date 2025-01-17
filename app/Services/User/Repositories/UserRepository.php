@@ -26,7 +26,6 @@ final class UserRepository
     public function create(CreateUserDto $createUserDto): UserDto
     {
         $user = new User;
-        $user->uuid = Uuid::uuid4()->toString();
         $user->first_name = $createUserDto->getFirstName();
         $user->last_name = $createUserDto->getLastName();
         $user->second_name = $createUserDto->getSecondName();
