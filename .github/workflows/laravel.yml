@@ -14,10 +14,17 @@ jobs:
       mysql:
         image: mysql:8.0
         env:
-          MYSQL_ROOT_PASSWORD: root
-          MYSQL_DATABASE: test_db
+          MYSQL_DATABASE: 'test_database' # Новая база данных для тестов
+          MYSQL_USER: diplom
+          MYSQL_PASSWORD: diplom
+          MYSQL_ROOT_HOST: "%"
+          MYSQL_ROOT_PASSWORD: diplom
+          SERVICE_TAGS: dev
+          SERVICE_NAME: mysql
+          MYSQL_TCP_PORT: '3308'
+          MYSQL_ALLOW_EMPTY_PASSWORD: 1
         ports:
-          - 3306:3306
+          - 3309:3308
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
 
     steps:
