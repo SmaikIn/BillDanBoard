@@ -1,0 +1,63 @@
+image: docker:20.10.16
+services:
+  - docker:20.10.16-dind
+
+stages:
+  - build
+  #  - test
+  - release
+  - deploy
+
+variables:
+  IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
+  LATEST_IMAGE_TAG: $CI_REGISTRY_IMAGE:latest
+
+before_script:
+  - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+
+
+build:
+  stage: build
+  script:
+    - docker build . --file ./docker/php/Dockerfile --network host --tag $IMAGE_TAG
+    - docker push $IMAGE_TAG
+  only:
+    - tags
+  except:
+    - branches
+
+#test:
+#  stage: test
+#  script:
+#    - docker pull $IMAGE_TAG
+#    - docker run --rm $IMAGE_TAG root /bin/bash -c "composer create-project; php ./vendor/bin/phpunit --colors"
+#  only:
+#    - tags
+#  except:
+#    - branches
+
+release:
+  stage: release
+  script:
+    - docker pull $IMAGE_TAG
+    - docker tag $IMAGE_TAG $LATEST_IMAGE_TAG
+    - docker push $LATEST_IMAGE_TAG
+  only:
+    - tags
+  except:
+    - branches
+
+deploy:
+  stage: deploy
+  tags:
+    - deployment
+  before_script:
+    - apk add --update curl && rm -rf /var/cache/apk/*
+  script:
+    - curl --silent --show-error --fail -X POST $CD_URL
+  environment:
+    name: production
+  only:
+    - tags
+  except:
+    - branches
