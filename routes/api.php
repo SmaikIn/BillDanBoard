@@ -24,7 +24,7 @@ Route::group(['prefix' => 'auth', 'middleware' => 'auth'], function () {
     Route::patch('updateAccount/{uuid}', [AccountController::class, 'update']);
     Route::delete('deleteAccount/{uuid}', [AccountController::class, 'destroy']);
 
-    Route::post('login', [AuthController::class, 'login'])->withoutMiddleware(['auth']);
+    Route::post('login', [AuthController::class, 'login'])->withoutMiddleware(['auth'])->name('login');
     Route::post('logout', [AuthController::class, 'logout']);
     Route::post('refresh', [AuthController::class, 'refresh'])->withoutMiddleware(['auth']);
     Route::get('me', [AuthController::class, 'me']);
@@ -47,10 +47,4 @@ Route::group(['prefix' => 'account', 'middleware' => 'auth'], function () {
         Route::post('{companyId}/profiles/ban', [AccountCompanyProfileController::class, 'banProfile']);
         Route::apiResource('{companyId}/profiles', AccountCompanyProfileController::class)->except(['store']);
     });
-});
-
-Route::get('test', function () {
-    dd(\File::get('vector-users-icon.jpg'));
-    return Storage::disk('local')->get('vector-users-icon.jpg');
-    return asset('vector-users-icon.jpg');
 });
