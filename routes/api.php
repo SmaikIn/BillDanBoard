@@ -21,6 +21,12 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return response()->json(['message' => 'API is working']);
 });
+Route::get('/qwerty', function () {
+    return response()->json(['message' => 'API is working level2']);
+});
+Route::get('/abc/qwerty', function () {
+    return response()->json(['message' => 'API is working level3']);
+});
 Route::group(['prefix' => 'auth', 'middleware' => 'auth'], function () {
     Route::post('register', [AccountController::class, 'store'])->withoutMiddleware(['auth'])->name('register');
     Route::patch('updateAccount/{uuid}', [AccountController::class, 'update']);
