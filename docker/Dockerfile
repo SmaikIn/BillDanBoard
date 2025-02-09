@@ -1,8 +1,8 @@
-# Change php version
-FROM php:8.2-fpm
+FROM php:8.4-fpm-alpine
 
-# Installing services and extensions
-RUN apt-get update && apt-get install -y \
+RUN apt-get -y update && apt-get upgrade -y
+
+RUN apt-get install -y \
     mariadb-client \
     build-essential \
     libpng-dev \
@@ -36,11 +36,5 @@ RUN apt-get update && apt-get install -y \
 RUN apt-get update && apt-get install -y libmagickwand-dev --no-install-recommends && rm -rf /var/lib/apt/lists/*
 RUN printf "\n" | pecl install imagick
 RUN docker-php-ext-enable imagick
-# Add user for aplication
-#RUN groupadd -g 1000 admin && useradd -u 1000 -ms /bin/bash -g admin admin
-#COPY --chown=admin:admin . /var/www
-#USER admin
-USER nobody
 
-EXPOSE 9000
 CMD ["php-fpm"]
