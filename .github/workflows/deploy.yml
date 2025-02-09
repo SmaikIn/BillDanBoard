@@ -15,5 +15,6 @@ jobs:
 
       - name: Deploy to Server
         run:
+          sudo su - user -s /bin/bash -c && ${{ secrets.USER_PASSWORD }}
           cd && cd ../../var/www/ && ls -la
 
