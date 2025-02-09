@@ -15,4 +15,5 @@ jobs:
 
       - name: Deploy to Server
         run:
-          ls -la
+          cd ../../ && ls -la
+
