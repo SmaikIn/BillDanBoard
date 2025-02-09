@@ -18,7 +18,9 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
-
+Route::get('healthCheck', function () {
+    return 1;
+});
 Route::group(['prefix' => 'auth', 'middleware' => 'auth'], function () {
     Route::post('register', [AccountController::class, 'store'])->withoutMiddleware(['auth'])->name('register');
     Route::patch('updateAccount/{uuid}', [AccountController::class, 'update']);
