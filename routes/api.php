@@ -18,9 +18,6 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
-Route::get('/', function () {
-    return response()->json(['message' => 'API is working']);
-});
 Route::get('/qwerty', function () {
     return response()->json(['message' => 'API is working level2']);
 });
