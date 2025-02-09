@@ -11,22 +11,15 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Set up SSH
-        uses: webfactory/ssh-agent@v0.9.0
-        with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+        uses: actions/checkout@v3
 
       - name: Deploy to Server
-        run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} << 'EOF'
-            cd /var/www/parts.sotrans.ru/ &&
-            git pull &&
-            composer install --optimize-autoloader --no-dev &&
-            npm install --frozen-lockfile &&
-            npm run prod &&
-            php artisan migrate --force &&
-            php artisan db:seed --force &&
-            php artisan optimize:clear
-          EOF
+        run:
+          cd /var/www/parts.sotrans.ru/ &&
+          git pull &&
+          composer install --optimize-autoloader --no-dev &&
+          npm install --frozen-lockfile &&
+          npm run prod &&
+          php artisan migrate --force &&
+          php artisan db:seed --force &&
+          php artisan optimize:clear
