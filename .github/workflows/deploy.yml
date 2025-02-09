@@ -15,11 +15,5 @@ jobs:
 
       - name: Deploy to Server
         run:
-          cd && cd ../../var/www/BillDanBoard/ &&
-          git pull &&
-          composer install --optimize-autoloader --no-dev &&
-          npm install --frozen-lockfile &&
-          npm run prod &&
-          php artisan migrate --force &&
-          php artisan db:seed --force &&
-          php artisan optimize:clear
+          cd && cd ../../var/www/ && ls -la
+
