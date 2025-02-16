@@ -10,6 +10,7 @@ use App\Services\User\Dto\CreateUserDto;
 use App\Services\User\Dto\UpdateUserDto;
 use App\Services\User\Dto\UserDto;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Hash;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 
@@ -21,6 +22,18 @@ final class UserRepository
         $user = User::where('uuid', $userId->toString())->firstOrFail();
 
         return $this->formatUserDto($user);
+    }
+
+    public function findByEmail(Email $email): UserDto
+    {
+        $user = User::where('email', $email->value())->firstOrFail();
+
+        return $this->formatUserDto($user);
+    }
+
+    public function changeUserPassword(UuidInterface $userId, string $password): bool
+    {
+        return User::where('uuid', $userId->toString())->firstOrFail()->update(['password' => Hash::make($password)]);
     }
 
     public function create(CreateUserDto $createUserDto): UserDto

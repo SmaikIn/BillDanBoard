@@ -123,9 +123,12 @@ return [
         'profile' => [
             'company' => 'company_profiles_%s',
         ],
-        'permission' =>[
+        'permission' => [
             'permission' => 'permission_%s',
             'all' => 'permissions',
+        ],
+        'user' => [
+            'reset-link' => 'reset_link_user_%s',
         ]
     ]
 ];

@@ -33,6 +33,9 @@ Route::group(['prefix' => 'auth', 'middleware' => 'auth'], function () {
     Route::post('logout', [AuthController::class, 'logout']);
     Route::post('refresh', [AuthController::class, 'refresh'])->withoutMiddleware(['auth']);
     Route::get('me', [AuthController::class, 'me']);
+
+    Route::post('/resetPassword', [AccountController::class, 'resetUserPassword'])->name('auth.reset.password');
+    Route::post('/forgetPassword', [AuthController::class, 'forgotPassword'])->name('auth.forgot.password');
 });
 Route::group(['prefix' => 'account', 'middleware' => 'auth'], function () {
     Route::get('/companies', [AccountCompanyController::class, 'index']);

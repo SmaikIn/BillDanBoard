@@ -12,8 +12,6 @@ use App\Services\Department\DepartmentService;
 use App\Services\Department\LaravelDepartmentService;
 use App\Services\Department\Repositories\CacheDepartmentRepository;
 use App\Services\Department\Repositories\DepartmentRepository;
-use App\Services\Mail\LaravelMailService;
-use App\Services\Mail\MailService;
 use App\Services\Permission\LaravelPermissionService;
 use App\Services\Permission\PermissionService;
 use App\Services\Permission\Repositories\CachePermissionRepository;
@@ -26,8 +24,6 @@ use App\Services\Role\LaravelRoleService;
 use App\Services\Role\Repositories\CacheRoleRepository;
 use App\Services\Role\Repositories\RoleRepository;
 use App\Services\Role\RoleService;
-use App\Services\User\LaravelUserService;
-use App\Services\User\UserService;
 use Illuminate\Support\ServiceProvider;
 use Tymon\JWTAuth\JWTGuard;
 
@@ -55,9 +51,6 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->singleton(CompanyService::class, LaravelCompanyService::class);
         $this->app->singleton(CompanyRepository::class, CacheCompanyRepository::class);
-
-        $this->app->singleton(UserService::class, LaravelUserService::class);
-        $this->app->singleton(MailService::class, LaravelMailService::class);
 
         $this->app->singleton(RoleService::class, LaravelRoleService::class);
         $this->app->singleton(RoleRepository::class, CacheRoleRepository::class);
