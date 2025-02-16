@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Account;
 
+use App\Domain\ValueObjects\Email;
 use App\Http\Controllers\Controller;
 use App\Http\Formater\Formater;
 use App\Http\Requests\Account\CreateAccountRequest;
+use App\Http\Requests\Account\ResetPasswordRequest;
 use App\Http\Requests\Account\UpdateAccountRequest;
 use App\Http\Resources\User\UserResource;
 use App\Http\Responses\JsonApiResponse;
@@ -57,6 +59,21 @@ class AccountController extends Controller
         }
 
         return new JsonErrorResponse('try Again');
+    }
+
+    public function resetUserPassword(ResetPasswordRequest $request)
+    {
+        try {
+            $email = Email::create($request->get('email'));
+
+            $user = $this->userService->findByEmail($email);
+
+            $this->userService->sendResetLink($user);
+
+            return new JsonApiResponse([], status: 201);
+        } catch (\Throwable $throwable) {
+            return new JsonErrorResponse($throwable->getMessage(), status: 500);
+        }
     }
 
     private function getAvatarPath(Request $request): string

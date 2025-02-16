@@ -4,8 +4,10 @@ namespace App\Providers;
 
 use App\Listeners\CreateUserListener;
 use App\Listeners\InviteUserToCompanyListener;
+use App\Listeners\UserResetLinkListener;
 use App\Services\Company\Events\InviteUserToCompanyEvent;
 use App\Services\User\Events\CreateUserEvent;
+use App\Services\User\Events\UserResetLinkEvent;
 use App\Solutions\Yandex\YandexExtendSocialite;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -24,13 +26,16 @@ class EventServiceProvider extends ServiceProvider
             SendEmailVerificationNotification::class,
         ],
         SocialiteWasCalled::class => [
-            YandexExtendSocialite::class . '@handle'
+            YandexExtendSocialite::class.'@handle'
         ],
         CreateUserEvent::class => [
             CreateUserListener::class,
         ],
         InviteUserToCompanyEvent::class => [
             InviteUserToCompanyListener::class,
+        ],
+        UserResetLinkEvent::class => [
+            UserResetLinkListener::class
         ],
     ];
 

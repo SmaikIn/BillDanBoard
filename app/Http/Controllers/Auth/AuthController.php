@@ -4,9 +4,9 @@ namespace App\Http\Controllers\Auth;
 
 use App\Domain\ValueObjects\Email;
 use App\Domain\ValueObjects\Password;
-use App\Dto\UserDto as UserFrontend;
 use App\Http\Controllers\Controller;
 use App\Http\Formater\Formater;
+use App\Http\Requests\Auth\ForgotPasswordRequest;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Resources\Auth\TokenResource;
 use App\Http\Resources\User\UserResource;
@@ -15,7 +15,6 @@ use App\Http\Responses\JsonErrorResponse;
 use App\Services\Auth\AuthService;
 use App\Services\Auth\Dto\AuthAttemptDto;
 use App\Services\Auth\Dto\JWTDto;
-use App\Services\User\Dto\UserDto;
 use App\Services\User\UserService;
 use Illuminate\Http\Request;
 use InvalidArgumentException;
@@ -76,6 +75,34 @@ class AuthController extends Controller
         }
 
         return $this->respondWithToken($token);
+    }
+
+    public function forgotPassword(ForgotPasswordRequest $request)
+    {
+        try {
+            $password = Password::create($request->get('password'));
+            $code = $request->get('token');
+
+            $user = $this->userService->forgotPassword($password, $code);
+
+            try {
+                $dto = new AuthAttemptDto(
+                    Email::create($user->getEmail()->value()),
+                    Password::create($password->value())
+                );
+            } catch (InvalidArgumentException) {
+                return new JsonErrorResponse(__('auth.failed'));
+            }
+
+            $token = $this->authService->attempt($dto);
+            if (is_null($token)) {
+                return new JsonErrorResponse(__('auth.failed'));
+            }
+
+            return $this->respondWithToken($token);
+        } catch (\Throwable $throwable) {
+            return new JsonErrorResponse($throwable->getMessage(), status: 500);
+        }
     }
 
     protected function respondWithToken(JWTDto $token): JsonApiResponse
